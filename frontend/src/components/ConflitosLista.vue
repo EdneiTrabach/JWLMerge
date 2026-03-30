@@ -67,6 +67,17 @@
           Manter B
         </button>
       </div>
+
+      <div class="conflict-result">
+        <div class="result-preview">
+          <div class="result-title">Resultado (preview):</div>
+          <pre class="col-pre">{{ previewFor(c) }}</pre>
+        </div>
+        <div class="result-edit">
+          <label class="col-title">Editar resultado (opcional)</label>
+          <textarea :value="getOverride(c)" @input="onEdit($event.target.value, c)" rows="4" />
+        </div>
+      </div>
     </div>
 
     <div class="pagination">
@@ -109,23 +120,64 @@ function pickAllWithActive(choice) {
 function isPicked(conflict, pick) {
   if (!conflict) return false;
   const id = `${conflict.table}::${conflict.key}`;
-  return choices && choices.value && choices.value[id] && choices.value[id].pick === pick;
+  return (
+    choices &&
+    choices.value &&
+    choices.value[id] &&
+    choices.value[id].pick === pick
+  );
+}
+
+function idFor(conflict){ return `${conflict.table}::${conflict.key}` }
+
+function getOverride(conflict){
+  const id = idFor(conflict)
+  return choices && choices.value && choices.value[id] ? choices.value[id].override || '' : ''
+}
+
+function onEdit(text, conflict){
+  const id = idFor(conflict)
+  if (!choices.value[id]) {
+    // ensure there's an entry so apply later includes this edit; default pick to 'A'
+    choices.value[id] = { table: conflict.table, key: conflict.key, keyCol: conflict.keyCol, pick: 'A' }
+  }
+  choices.value[id].override = text
+}
+
+function previewFor(conflict){
+  const id = idFor(conflict)
+  const ch = choices && choices.value && choices.value[id]
+  if (ch && ch.override) return ch.override
+  const pick = ch && ch.pick ? ch.pick : null
+  const keys = diffKeys(conflict)
+  if (pick === 'A') return formatDiffValues(conflict.a, keys)
+  if (pick === 'B') return formatDiffValues(conflict.b, keys)
+  return '{}'
 }
 
 // Sync the filter active state with visible choices on the current page.
 const visiblePicks = computed(() => {
-  return pagedConflicts.value.map(c => {
-    const id = `${c.table}::${c.key}`
-    return choices && choices.value && choices.value[id] ? choices.value[id].pick : null
-  })
-})
+  return pagedConflicts.value.map((c) => {
+    const id = `${c.table}::${c.key}`;
+    return choices && choices.value && choices.value[id]
+      ? choices.value[id].pick
+      : null;
+  });
+});
 
-watch(visiblePicks, (picks) => {
-  if (!picks || picks.length === 0) { activeFilter.value = null; return }
-  const allA = picks.every(p => p === 'A')
-  const allB = picks.every(p => p === 'B')
-  activeFilter.value = allA ? 'A' : (allB ? 'B' : null)
-}, { immediate: true })
+watch(
+  visiblePicks,
+  (picks) => {
+    if (!picks || picks.length === 0) {
+      activeFilter.value = null;
+      return;
+    }
+    const allA = picks.every((p) => p === "A");
+    const allB = picks.every((p) => p === "B");
+    activeFilter.value = allA ? "A" : allB ? "B" : null;
+  },
+  { immediate: true },
+);
 </script>
 
 <style scoped>
@@ -172,14 +224,18 @@ watch(visiblePicks, (picks) => {
     opacity 0.12s ease;
 }
 .btn-filter:active {
-  background: linear-gradient(90deg,#ffb347 0%,#ff9e2a 100%);
+  background: linear-gradient(90deg, #ffb347 0%, #ff9e2a 100%);
   color: #081014;
-  box-shadow: 0 10px 30px rgba(255,160,40,0.22), inset 0 -2px 6px rgba(0,0,0,0.12);
+  box-shadow:
+    0 10px 30px rgba(255, 160, 40, 0.22),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.12);
   opacity: 0.6;
   cursor: not-allowed;
-  background: linear-gradient(90deg,#4fc3f7 0%,#2b9ef3 100%);
+  background: linear-gradient(90deg, #4fc3f7 0%, #2b9ef3 100%);
   color: #021826;
-  box-shadow: 0 10px 30px rgba(40,150,240,0.18), inset 0 -2px 6px rgba(0,0,0,0.12);
+  box-shadow:
+    0 10px 30px rgba(40, 150, 240, 0.18),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.12);
   color: #111;
   box-shadow: 0 8px 20px rgba(255, 180, 60, 0.15);
 }
@@ -252,14 +308,18 @@ watch(visiblePicks, (picks) => {
   cursor: not-allowed;
 }
 .btn-choose.active-a {
-  background: linear-gradient(90deg,#ffb347 0%,#ff8f2a 100%);
+  background: linear-gradient(90deg, #ffb347 0%, #ff8f2a 100%);
   color: #081014;
-  box-shadow: 0 8px 22px rgba(255,150,40,0.20), inset 0 -2px 6px rgba(0,0,0,0.14);
+  box-shadow:
+    0 8px 22px rgba(255, 150, 40, 0.2),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.14);
 }
 .btn-choose.active-b {
-  background: linear-gradient(90deg,#62c8ff 0%,#2b9ef3 100%);
+  background: linear-gradient(90deg, #62c8ff 0%, #2b9ef3 100%);
   color: #021826;
-  box-shadow: 0 8px 22px rgba(40,150,240,0.14), inset 0 -2px 6px rgba(0,0,0,0.12);
+  box-shadow:
+    0 8px 22px rgba(40, 150, 240, 0.14),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.12);
 }
 .pagination {
   display: flex;
