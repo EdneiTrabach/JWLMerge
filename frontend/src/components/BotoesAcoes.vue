@@ -18,10 +18,13 @@
     
     <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
       <div class="modal">
-        <h3>Parabéns — Merge gerado!</h3>
-        <p>Seu arquivo de backup foi gerado com sucesso. Clique no botão abaixo para baixar e siga as instruções para instalar no JW Library.</p>
-        <a :href="mergedUrl" :download="downloadName || ''" class="download-btn">Baixar backup</a>
-        <button class="modal-close" @click="showModal = false">Fechar</button>
+        <ConflictReview v-if="showReview" @merged="onMerged" @cancel="showModal=false" />
+        <div v-else class="modal-result">
+          <h3>Parabéns — Merge gerado!</h3>
+          <p>Seu arquivo de backup foi gerado com sucesso. Clique no botão abaixo para baixar e siga as instruções para instalar no JW Library.</p>
+          <a :href="mergedUrl" :download="downloadName || ''" class="download-btn">Baixar backup</a>
+          <button class="modal-close" @click="showModal = false">Fechar</button>
+        </div>
       </div>
     </div>
     <!-- <button @click="downloadMerged" :disabled="!mergedUrl">Baixar merge</button> -->
@@ -47,11 +50,19 @@ const {
 import { ref } from 'vue'
 
 const showModal = ref(false)
+const showReview = ref(true)
+
+import ConflictReview from './ConflictReview.vue'
+
+function onMerged(){
+  // after merged, show result content
+  showReview.value = false
+}
 
 async function onApply() {
-  await applyChoicesAndMerge()
-  // if merge generated, show modal
-  if (mergedUrl && mergedUrl.value) showModal.value = true
+  // open review modal so user can edit per-conflict before final merge
+  showReview.value = true
+  showModal.value = true
 }
 </script>
 

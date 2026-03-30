@@ -1,9 +1,9 @@
 <template>
-  <div v-if="mergedUrl" class="download">
+  <!-- <div v-if="mergedUrl" class="download">
     <a :href="mergedUrl" :download="downloadName || ''" class="download-link"
       >Abrir/baixar arquivo de merge</a
     >
-  </div>
+  </div> -->
 </template>
 
 <script setup>
@@ -23,7 +23,7 @@ const { mergedUrl, downloadName } = useMergeUI();
   display: inline-block;
   padding: 10px 12px;
   border-radius: 8px;
-  background: linear-gradient(135deg,#ffb347 0%,#ff8f2a 100%);
+  background: linear-gradient(135deg, #ffb347 0%, #ff8f2a 100%);
   color: #fff;
   text-decoration: none;
   min-height: 44px;

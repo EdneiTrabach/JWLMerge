@@ -149,6 +149,28 @@ async function applyChoicesAndMerge() {
   }
 }
 
+// apply custom choices (with optional overrides/annotations)
+async function applyCustomChoices(customChosen) {
+  if (!customChosen || customChosen.length === 0) { log.value.unshift('Nenhuma escolha customizada fornecida; nada a aplicar'); return }
+  log.value.unshift('Aplicando escolhas customizadas e gerando merge local...')
+  try {
+    const cntA = customChosen.filter(c => c.pick === 'A').length
+    const cntB = customChosen.filter(c => c.pick === 'B').length
+    log.value.unshift(`Resumo escolhas custom: total=${customChosen.length} A=${cntA} B=${cntB}`)
+    log.value.unshift('Amostra escolhas custom: ' + JSON.stringify(customChosen.slice(0, 10)))
+    const { blob, filename } = await mergeWithChoices(fileA.value, fileB.value, customChosen, {
+      progress: (p) => { if (p && p.step) log.value.unshift(JSON.stringify(p)) }
+    })
+    const url = URL.createObjectURL(blob)
+    mergedUrl.value = url
+    downloadName.value = filename
+    log.value.unshift('Merge com escolhas custom gerado: ' + filename)
+    log.value.unshift('URL do merge criada (local): ' + url)
+  } catch (e) {
+    log.value.unshift('Erro ao aplicar escolhas customizadas: ' + (e.message || e))
+  }
+}
+
 function downloadMerged() {
   if (!mergedUrl.value) return log.value.unshift('Nenhum arquivo mergeado disponível para download')
   try {
@@ -213,6 +235,7 @@ export function useMergeUI() {
     page, perPage, tableFilter,
     onFileA, onFileB, inspectLocal, mergeServer, mergeLocal,
     detectAndShowConflicts, pickChoiceByIndex, pickAll, applyChoicesAndMerge,
+      applyCustomChoices,
     // full front-only merge: prefer = 'A' | 'B' | 'ask'
     mergeLocalFull,
     downloadMerged, tablesAvailable, filteredConflicts, totalPages, pagedConflicts,
