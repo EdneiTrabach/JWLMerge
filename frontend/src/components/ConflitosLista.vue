@@ -418,6 +418,60 @@ function getFieldValue(o, k) {
   }
 }
 
+// set a value into an object preserving its structure when possible
+function setFieldValue(o, k, newVal) {
+  if (o === null || o === undefined) return o;
+  // primitives -> return the new primitive value
+  if (typeof o === "string" || typeof o === "number" || typeof o === "boolean") return newVal;
+  try {
+    if (Array.isArray(o)) {
+      const idx = o.findIndex((x) => x !== null && x !== undefined);
+      const clone = o.slice();
+      if (idx >= 0) clone[idx] = setFieldValue(clone[idx], k, newVal);
+      return clone;
+    }
+    const clone = Object.assign({}, o);
+    if (Object.prototype.hasOwnProperty.call(clone, k)) {
+      clone[k] = newVal;
+      return clone;
+    }
+    const prefer = [
+      "Text",
+      "text",
+      "Content",
+      "content",
+      "Value",
+      "value",
+      "Display",
+      "display",
+      "Note",
+      "NoteContent",
+    ];
+    for (const p of prefer) if (Object.prototype.hasOwnProperty.call(clone, p)) {
+      clone[p] = newVal;
+      return clone;
+    }
+    const lk = k && String(k).toLowerCase();
+    for (const prop of Object.keys(clone)) if (prop.toLowerCase() === lk) {
+      clone[prop] = newVal;
+      return clone;
+    }
+    const props = Object.keys(clone);
+    if (props.length === 1) {
+      const v = clone[props[0]];
+      if (typeof v === "string" || typeof v === "number" || typeof v === "boolean") {
+        clone[props[0]] = newVal;
+        return clone;
+      }
+    }
+    // fallback: if can't find suitable primitive, attempt to set top-level key (least invasive)
+    if (!Object.prototype.hasOwnProperty.call(clone, k)) clone[k] = newVal;
+    return clone;
+  } catch (e) {
+    return o;
+  }
+}
+
 function renderDiffColumn(obj, otherObj, keys, side) {
   if (!keys || keys.length === 0) return '<div class="diff-empty">(no differing fields)</div>';
   const lines = [];
@@ -485,9 +539,54 @@ function renderPreviewHtml(obj, keys) {
 function renderPreviewFor(conflict) {
   const id = idFor(conflict);
   const ch = choices && choices.value && choices.value[id];
-  if (ch && ch.override) return `<pre class="col-pre">${escapeHtml(ch.override)}</pre>`;
-  const pick = ch && ch.pick ? ch.pick : null;
   const keys = diffKeys(conflict);
+  const pick = ch && ch.pick ? ch.pick : "A";
+  const base = pick === "A" ? conflict.a : conflict.b;
+
+  if (ch && ch.override) {
+    // apply override into a clone of the chosen object, preserving structure
+    const targetKeys = keys && keys.length ? keys : Object.keys(base || {});
+    // choose the most likely key to replace
+    let targetKey = null;
+    if (targetKeys.length === 1) targetKey = targetKeys[0];
+    else {
+      const prefer = ["Text", "text", "Content", "content", "Value", "value", "Note", "NoteContent", "Display", "display"];
+      for (const p of prefer) if (targetKeys.includes(p)) { targetKey = p; break; }
+      if (!targetKey) targetKey = targetKeys.find((x) => true);
+    }
+
+    const updated = setFieldValue(base, targetKey, ch.override);
+    // update LastModified fields if present or add one
+    const iso = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
+    let updatedClone = updated;
+    try {
+      // if LastModified is an object with TimeLastModified
+      if (updatedClone && typeof updatedClone === "object") {
+        if (Object.prototype.hasOwnProperty.call(updatedClone, "LastModified")) {
+          if (updatedClone.LastModified && typeof updatedClone.LastModified === "object" && Object.prototype.hasOwnProperty.call(updatedClone.LastModified, "TimeLastModified")) {
+            updatedClone = Object.assign({}, updatedClone);
+            updatedClone.LastModified = Object.assign({}, updatedClone.LastModified);
+            updatedClone.LastModified.TimeLastModified = iso;
+          } else {
+            updatedClone = Object.assign({}, updatedClone);
+            updatedClone.LastModified = iso;
+          }
+        } else if (Object.prototype.hasOwnProperty.call(updatedClone, "TimeLastModified")) {
+          updatedClone = Object.assign({}, updatedClone);
+          updatedClone.TimeLastModified = iso;
+        } else {
+          // add LastModified if none exists
+          updatedClone = Object.assign({}, updatedClone);
+          updatedClone.LastModified = iso;
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    return renderPreviewHtml(updatedClone, keys);
+  }
+
   if (pick === "A") return renderPreviewHtml(conflict.a, keys);
   if (pick === "B") return renderPreviewHtml(conflict.b, keys);
   return '<div class="diff-empty">(no choice)</div>';
