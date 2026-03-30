@@ -2,11 +2,21 @@
   <div>
     <div class="row">
       <label>Arquivo A (.jwlibrary)</label>
-      <input type="file" @change="onFileA" accept=".jwlibrary" class="file-input" />
+      <input
+        type="file"
+        @change="onFileA"
+        accept=".jwlibrary"
+        class="file-input"
+      />
     </div>
     <div class="row">
       <label>Arquivo B (.jwlibrary)</label>
-      <input type="file" @change="onFileB" accept=".jwlibrary" class="file-input" />
+      <input
+        type="file"
+        @change="onFileB"
+        accept=".jwlibrary"
+        class="file-input"
+      />
     </div>
   </div>
 </template>
@@ -20,5 +30,7 @@ const { onFileA, onFileB } = useMergeUI();
 .row {
   margin-bottom: 12px;
 }
-.file-input{width:100%}
+.file-input {
+  width: 100%;
+}
 </style>
