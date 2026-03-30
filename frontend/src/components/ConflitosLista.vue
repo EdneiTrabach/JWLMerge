@@ -81,7 +81,7 @@
 
 <script setup>
 import { useMergeUI } from "../composables/useMergeUI";
-import { ref } from 'vue'
+import { ref, computed, watch } from "vue";
 const {
   conflicts,
   tableFilter,
@@ -99,18 +99,33 @@ const {
   nextPage,
 } = useMergeUI();
 
-const activeFilter = ref(null)
-function pickAllWithActive(choice){
-  pickAll(choice)
+const activeFilter = ref(null);
+function pickAllWithActive(choice) {
+  pickAll(choice);
   // toggle: if already active, clear the active filter
-  activeFilter.value = (activeFilter.value === choice) ? null : choice
+  activeFilter.value = activeFilter.value === choice ? null : choice;
 }
 
-function isPicked(conflict, pick){
-  if(!conflict) return false
-  const id = `${conflict.table}::${conflict.key}`
-  return choices && choices[id] && choices[id].pick === pick
+function isPicked(conflict, pick) {
+  if (!conflict) return false;
+  const id = `${conflict.table}::${conflict.key}`;
+  return choices && choices[id] && choices[id].pick === pick;
 }
+
+// Sync the filter active state with visible choices on the current page.
+const visiblePicks = computed(() => {
+  return pagedConflicts.value.map(c => {
+    const id = `${c.table}::${c.key}`
+    return choices && choices[id] ? choices[id].pick : null
+  })
+})
+
+watch(visiblePicks, (picks) => {
+  if (!picks || picks.length === 0) { activeFilter.value = null; return }
+  const allA = picks.every(p => p === 'A')
+  const allB = picks.every(p => p === 'B')
+  activeFilter.value = allA ? 'A' : (allB ? 'B' : null)
+}, { immediate: true })
 </script>
 
 <style scoped>
@@ -143,7 +158,7 @@ function isPicked(conflict, pick){
 }
 
 /* filter action buttons */
-.btn-filter{
+.btn-filter {
   padding: 8px 12px;
   border-radius: 10px;
   font-weight: 700;
@@ -151,19 +166,27 @@ function isPicked(conflict, pick){
   cursor: pointer;
   color: #0b1220;
   background: #e6eef8;
-  transition: transform .08s ease, box-shadow .12s ease, opacity .12s ease;
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.12s ease,
+    opacity 0.12s ease;
 }
-.btn-filter:active{ transform: translateY(1px) }
-.btn-filter:disabled{ opacity:.6; cursor:not-allowed }
-.btn-filter.active-a{
-  background: linear-gradient(90deg,#ffd27a 0%,#ffb347 100%);
+.btn-filter:active {
+  transform: translateY(1px);
+}
+.btn-filter:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.btn-filter.active-a {
+  background: linear-gradient(90deg, #ffd27a 0%, #ffb347 100%);
   color: #111;
-  box-shadow: 0 8px 20px rgba(255,180,60,0.15);
+  box-shadow: 0 8px 20px rgba(255, 180, 60, 0.15);
 }
-.btn-filter.active-b{
-  background: linear-gradient(90deg,#9be6ff 0%,#4fc3f7 100%);
+.btn-filter.active-b {
+  background: linear-gradient(90deg, #9be6ff 0%, #4fc3f7 100%);
   color: #04263a;
-  box-shadow: 0 8px 20px rgba(79,195,247,0.12);
+  box-shadow: 0 8px 20px rgba(79, 195, 247, 0.12);
 }
 .conflict-item {
   margin-bottom: 10px;
@@ -209,7 +232,7 @@ function isPicked(conflict, pick){
 }
 
 /* per-conflict choice buttons */
-.btn-choose{
+.btn-choose {
   padding: 8px 12px;
   border-radius: 10px;
   font-weight: 700;
@@ -217,19 +240,26 @@ function isPicked(conflict, pick){
   cursor: pointer;
   background: #e6eef8;
   color: #071226;
-  transition: box-shadow .12s ease, transform .08s ease;
+  transition:
+    box-shadow 0.12s ease,
+    transform 0.08s ease;
 }
-.btn-choose:active{ transform: translateY(1px) }
-.btn-choose:disabled{ opacity:.6; cursor:not-allowed }
-.btn-choose.active-a{
-  background: linear-gradient(90deg,#ffd27a 0%,#ffb347 100%);
+.btn-choose:active {
+  transform: translateY(1px);
+}
+.btn-choose:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.btn-choose.active-a {
+  background: linear-gradient(90deg, #ffd27a 0%, #ffb347 100%);
   color: #111;
-  box-shadow: 0 8px 20px rgba(255,180,60,0.12);
+  box-shadow: 0 8px 20px rgba(255, 180, 60, 0.12);
 }
-.btn-choose.active-b{
-  background: linear-gradient(90deg,#9be6ff 0%,#4fc3f7 100%);
+.btn-choose.active-b {
+  background: linear-gradient(90deg, #9be6ff 0%, #4fc3f7 100%);
   color: #04263a;
-  box-shadow: 0 8px 20px rgba(79,195,247,0.10);
+  box-shadow: 0 8px 20px rgba(79, 195, 247, 0.1);
 }
 .pagination {
   display: flex;
