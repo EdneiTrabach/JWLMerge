@@ -1,6 +1,6 @@
 <template>
   <div class="actions">
-    <button @click="inspectLocal" :disabled="!fileA && !fileB">
+    <!-- <button @click="inspectLocal" :disabled="!fileA && !fileB">
       Inspecionar
     </button>
     <button @click="mergeLocal" :disabled="!fileA || !fileB">
@@ -8,14 +8,14 @@
     </button>
     <button @click="mergeLocalFull('A')" :disabled="!fileA || !fileB">
       Mesclar tudo no front (A)
-    </button>
+    </button> -->
     <button @click="detectAndShowConflicts" :disabled="!fileA || !fileB">
       Detectar conflitos
     </button>
     <button @click="applyChoicesAndMerge" :disabled="!conflicts.length">
       Aplicar escolhas e mesclar
     </button>
-    <button @click="downloadMerged" :disabled="!mergedUrl">Baixar merge</button>
+    <!-- <button @click="downloadMerged" :disabled="!mergedUrl">Baixar merge</button> -->
   </div>
 </template>
 

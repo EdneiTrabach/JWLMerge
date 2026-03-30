@@ -15,16 +15,16 @@ header h1 {
 /* Mobile-first base styles */
 :root {
   /* Dark theme variables */
-  --bg: #07101a;         /* page background */
-  --card-bg: #0b1220;    /* card background */
+  --bg: #07101a; /* page background */
+  --card-bg: #0b1220; /* card background */
   --panel-bg: #06121a;
-  --text: #e6eef8;       /* main text (near white) */
-  --muted: #9aa6b2;      /* muted text */
-  --primary: #7c5cff;    /* accent */
+  --text: #e6eef8; /* main text (near white) */
+  --muted: #9aa6b2; /* muted text */
+  --primary: #7c5cff; /* accent */
   --primary-contrast: #ffffff;
   --gap: 12px;
   --radius: 10px;
-    --max-width: 980px;
+  --max-width: 980px;
 }
 
 *,
@@ -33,11 +33,6 @@ header h1 {
   box-sizing: border-box;
 }
 
-html,
-body {
-  height: 100%;
-  margin: 0;
-}
 
 body {
   font-family:
@@ -64,12 +59,10 @@ body {
   margin: 0 auto;
 }
 .card {
-  background: linear-gradient(180deg, var(--card-bg), var(--panel-bg));
   padding: 16px;
   border-radius: var(--radius);
-  box-shadow: 0 6px 20px rgba(2,6,12,0.6);
-  border: 1px solid rgba(255,255,255,0.03);
-
+  box-shadow: 0 6px 20px rgba(2, 6, 12, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 /* Mobile-first form rows */
@@ -98,7 +91,7 @@ select,
 textarea {
   width: 100%;
   padding: 10px;
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 6px;
   font-size: 15px;
   background: transparent;
@@ -122,7 +115,7 @@ textarea {
 .btn.secondary {
   background: transparent;
   color: var(--text);
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 /* Lists / conflict list */
@@ -138,7 +131,7 @@ textarea {
   padding: 10px;
   border-radius: 8px;
   background: var(--card-bg);
-  border: 1px solid rgba(255,255,255,0.03);
+  border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 /* Responsive tweaks for larger screens */
@@ -188,4 +181,3 @@ a {
   color: var(--muted);
   font-family: monospace;
 }
-

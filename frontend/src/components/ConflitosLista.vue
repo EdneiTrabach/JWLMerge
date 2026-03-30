@@ -2,13 +2,13 @@
   <div v-if="conflicts.length" class="conflicts">
     <h3>Conflitos detectados ({{ conflicts.length }})</h3>
     <div class="filters">
-      <label>Filtrar por tabela:</label>
+      <!-- <label>Filtrar por tabela:</label>
       <select v-model="tableFilter" class="select-table">
         <option value="">(todas)</option>
         <option v-for="t in tablesAvailable" :key="t" :value="t">
           {{ t }}
         </option>
-      </select>
+      </select> -->
       <label class="label-page">Por página:</label>
       <select v-model.number="perPage" class="select-page">
         <option :value="6">6</option>

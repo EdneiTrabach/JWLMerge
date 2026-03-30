@@ -5,12 +5,7 @@
   --panel: rgba(255, 255, 255, 0.04);
   --accent: #7b5cfb;
 }
-html,
-body,
-#app {
-  height: 100%;
-  margin: 0;
-}
+
 body {
   font-family: Inter, Arial, Helvetica, sans-serif;
   background: linear-gradient(135deg, var(--bg-1), var(--bg-2));

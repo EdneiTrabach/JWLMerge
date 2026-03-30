@@ -10,7 +10,7 @@
         <BotoesAcoes />
         <LinkDownload />
         <ConflitosLista />
-        <AreaLog />
+        <!-- <AreaLog /> -->
       </section>
     </main>
   </div>
@@ -21,7 +21,7 @@ import SeletorArquivos from "./SeletorArquivos.vue";
 import BotoesAcoes from "./BotoesAcoes.vue";
 import LinkDownload from "./LinkDownload.vue";
 import ConflitosLista from "./ConflitosLista.vue";
-import AreaLog from "./AreaLog.vue";
+// import AreaLog from "./AreaLog.vue";
 </script>
 
 <style scoped>
