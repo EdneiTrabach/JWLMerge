@@ -75,7 +75,11 @@
         </div>
         <div class="result-edit">
           <label class="col-title">Editar resultado (opcional)</label>
-          <textarea :value="getOverride(c)" @input="onEdit($event.target.value, c)" rows="4" />
+          <textarea
+            :value="getOverride(c)"
+            @input="onEdit($event.target.value, c)"
+            rows="4"
+          />
         </div>
       </div>
     </div>
@@ -128,31 +132,40 @@ function isPicked(conflict, pick) {
   );
 }
 
-function idFor(conflict){ return `${conflict.table}::${conflict.key}` }
-
-function getOverride(conflict){
-  const id = idFor(conflict)
-  return choices && choices.value && choices.value[id] ? choices.value[id].override || '' : ''
+function idFor(conflict) {
+  return `${conflict.table}::${conflict.key}`;
 }
 
-function onEdit(text, conflict){
-  const id = idFor(conflict)
+function getOverride(conflict) {
+  const id = idFor(conflict);
+  return choices && choices.value && choices.value[id]
+    ? choices.value[id].override || ""
+    : "";
+}
+
+function onEdit(text, conflict) {
+  const id = idFor(conflict);
   if (!choices.value[id]) {
     // ensure there's an entry so apply later includes this edit; default pick to 'A'
-    choices.value[id] = { table: conflict.table, key: conflict.key, keyCol: conflict.keyCol, pick: 'A' }
+    choices.value[id] = {
+      table: conflict.table,
+      key: conflict.key,
+      keyCol: conflict.keyCol,
+      pick: "A",
+    };
   }
-  choices.value[id].override = text
+  choices.value[id].override = text;
 }
 
-function previewFor(conflict){
-  const id = idFor(conflict)
-  const ch = choices && choices.value && choices.value[id]
-  if (ch && ch.override) return ch.override
-  const pick = ch && ch.pick ? ch.pick : null
-  const keys = diffKeys(conflict)
-  if (pick === 'A') return formatDiffValues(conflict.a, keys)
-  if (pick === 'B') return formatDiffValues(conflict.b, keys)
-  return '{}'
+function previewFor(conflict) {
+  const id = idFor(conflict);
+  const ch = choices && choices.value && choices.value[id];
+  if (ch && ch.override) return ch.override;
+  const pick = ch && ch.pick ? ch.pick : null;
+  const keys = diffKeys(conflict);
+  if (pick === "A") return formatDiffValues(conflict.a, keys);
+  if (pick === "B") return formatDiffValues(conflict.b, keys);
+  return "{}";
 }
 
 // Sync the filter active state with visible choices on the current page.
