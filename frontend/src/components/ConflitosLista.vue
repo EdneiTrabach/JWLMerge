@@ -707,7 +707,6 @@ watch(
 .col-pre {
   white-space: pre-wrap;
   font-size: 12px;
-  color: #e6eef8;
   overflow-wrap: anywhere;
   word-break: break-word;
   max-width: 100%;
@@ -721,6 +720,23 @@ watch(
 }
 .conflict-actions button {
   min-height: 44px;
+}
+
+/* result preview styling (success) */
+.conflict-result {
+  margin-top: 1rem;
+}
+.conflict-result .result-preview {
+  background: linear-gradient(90deg, #eafbea 0%, #d6ffe0 100%);
+  border: 1px solid #bff3c6;
+  color: #052a10;
+  padding: 10px;
+  border-radius: 8px;
+}
+.conflict-result .result-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #04421a;
 }
 
 /* per-conflict choice buttons */

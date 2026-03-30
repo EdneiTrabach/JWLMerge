@@ -16,7 +16,14 @@
     "successTitle": "Congrats — Merge generated!",
     "successBody": "Your backup file was generated successfully. Click the button below to download and follow instructions to install in JW Library.",
     "downloadButton": "Download backup",
-    "close": "Close"
+    "close": "Close",
+    "fileLabel": "File",
+    "unknownName": "(unknown name)",
+    "restoreTitle": "How to restore/use the merged file",
+    "restore1": "Download the file using the button above.",
+    "restore2": "Make a backup copy of your current .jwlibrary file before replacing.",
+    "restore3": "Replace the old file with the new one in the same location or import the new file into the app.",
+    "restore4": "If something goes wrong, restore the backup copy you saved in step 2."
   },
   "conflicts": {
     "detected": "Conflicts detected ({count})",
@@ -64,6 +71,3 @@
   },
   "language": "Language"
 }
-
-
-

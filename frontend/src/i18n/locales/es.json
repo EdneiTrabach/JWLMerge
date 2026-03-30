@@ -16,7 +16,14 @@
     "successTitle": "¡Felicidades — Fusión generada!",
     "successBody": "Su archivo de copia de seguridad se generó con éxito. Haga clic en el botón a continuación para descargar y siga las instrucciones para instalar en JW Library.",
     "downloadButton": "Descargar copia de seguridad",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "fileLabel": "Archivo",
+    "unknownName": "(nombre desconocido)",
+    "restoreTitle": "Cómo restaurar/us ar el archivo fusionado",
+    "restore1": "Descargue el archivo usando el botón de arriba.",
+    "restore2": "Haga una copia de seguridad de su archivo .jwlibrary actual antes de reemplazar.",
+    "restore3": "Reemplace el archivo antiguo por el nuevo en la misma ubicación o importe el nuevo en la aplicación.",
+    "restore4": "Si algo sale mal, restaure la copia de seguridad que guardó en el paso 2."
   },
   "conflicts": {
     "detected": "Conflictos detectados ({count})",

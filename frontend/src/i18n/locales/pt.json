@@ -16,7 +16,14 @@
     "successTitle": "Parabéns — Merge gerado!",
     "successBody": "Seu arquivo de backup foi gerado com sucesso. Clique no botão abaixo para baixar e siga as instruções para instalar no JW Library.",
     "downloadButton": "Baixar backup",
-    "close": "Fechar"
+    "close": "Fechar",
+    "fileLabel": "Arquivo",
+    "unknownName": "(nome desconhecido)",
+    "restoreTitle": "Como restaurar/usar o arquivo mesclado",
+    "restore1": "Baixe o arquivo usando o botão acima.",
+    "restore2": "Faça uma cópia de segurança do seu arquivo atual (.jwlibrary) antes de substituir.",
+    "restore3": "Substitua o arquivo antigo pelo novo no mesmo local ou importe o novo no aplicativo.",
+    "restore4": "Se algo der errado, restaure a cópia de segurança que você salvou no passo 2."
   },
   "conflicts": {
     "detected": "Conflitos detectados ({count})",

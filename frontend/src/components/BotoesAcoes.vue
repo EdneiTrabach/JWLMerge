@@ -14,14 +14,14 @@
       @click="detectAndShowConflicts"
       :disabled="!fileA || !fileB"
     >
-      {{ $t('actions.detectConflicts') }}
+      {{ $t("actions.detectConflicts") }}
     </button>
     <button
       class="btn btn-accent"
       @click="onApply"
       :disabled="!conflicts.length"
     >
-      {{ $t('actions.applyAndMerge') }}
+      {{ $t("actions.applyAndMerge") }}
     </button>
 
     <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
@@ -32,15 +32,17 @@
           @cancel="showModal = false"
         />
         <div v-else class="modal-result">
-          <h3>{{ $t('modal.successTitle') }}</h3>
-          <p>{{ $t('modal.successBody') }}</p>
+          <h3>{{ $t("modal.successTitle") }}</h3>
+          <p>{{ $t("modal.successBody") }}</p>
           <a
             :href="mergedUrl"
             :download="downloadName || ''"
             class="download-btn"
-            >{{ $t('modal.downloadButton') }}</a
+            >{{ $t("modal.downloadButton") }}</a
           >
-          <button class="modal-close" @click="showModal = false">{{ $t('modal.close') }}</button>
+          <button class="modal-close" @click="showModal = false">
+            {{ $t("modal.close") }}
+          </button>
         </div>
       </div>
     </div>
@@ -54,6 +56,7 @@ const {
   fileA,
   fileB,
   mergedUrl,
+  downloadName,
   conflicts,
   inspectLocal,
   mergeServer,
@@ -77,8 +80,13 @@ function onMerged() {
 }
 
 async function onApply() {
-  // open review modal so user can edit per-conflict before final merge
-  showReview.value = true;
+  // generate merge immediately using current choices, then show result modal
+  try {
+    await applyChoicesAndMerge();
+  } catch (e) {
+    console.error("onApply: applyChoicesAndMerge failed", e);
+  }
+  showReview.value = false; // show result (download) view
   showModal.value = true;
 }
 </script>
