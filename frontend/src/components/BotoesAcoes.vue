@@ -66,10 +66,12 @@ const {
 .btn:disabled{ opacity: .55; cursor: not-allowed; box-shadow: none }
 
 .btn-primary{
-  background: linear-gradient(135deg,#6b8cff 0%,#3b5bff 100%);
+  background: linear-gradient(135deg,#4fc3f7 0%,#2b9ef3 100%);
+  box-shadow: 0 10px 26px rgba(40,150,240,0.18);
 }
 .btn-accent{
-  background: linear-gradient(135deg,#ff7ab6 0%,#ff4d4d 100%);
+  background: linear-gradient(135deg,#ffb347 0%,#ff8f2a 100%);
+  box-shadow: 0 10px 26px rgba(255,150,40,0.18);
 }
 
 @media (min-width: 768px) {

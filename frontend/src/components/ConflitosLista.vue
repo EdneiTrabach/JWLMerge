@@ -172,14 +172,14 @@ watch(visiblePicks, (picks) => {
     opacity 0.12s ease;
 }
 .btn-filter:active {
-  transform: translateY(1px);
-}
-.btn-filter:disabled {
+  background: linear-gradient(90deg,#ffb347 0%,#ff9e2a 100%);
+  color: #081014;
+  box-shadow: 0 10px 30px rgba(255,160,40,0.22), inset 0 -2px 6px rgba(0,0,0,0.12);
   opacity: 0.6;
   cursor: not-allowed;
-}
-.btn-filter.active-a {
-  background: linear-gradient(90deg, #ffd27a 0%, #ffb347 100%);
+  background: linear-gradient(90deg,#4fc3f7 0%,#2b9ef3 100%);
+  color: #021826;
+  box-shadow: 0 10px 30px rgba(40,150,240,0.18), inset 0 -2px 6px rgba(0,0,0,0.12);
   color: #111;
   box-shadow: 0 8px 20px rgba(255, 180, 60, 0.15);
 }
@@ -252,14 +252,14 @@ watch(visiblePicks, (picks) => {
   cursor: not-allowed;
 }
 .btn-choose.active-a {
-  background: linear-gradient(90deg, #ffd27a 0%, #ffb347 100%);
-  color: #111;
-  box-shadow: 0 8px 20px rgba(255, 180, 60, 0.12);
+  background: linear-gradient(90deg,#ffb347 0%,#ff8f2a 100%);
+  color: #081014;
+  box-shadow: 0 8px 22px rgba(255,150,40,0.20), inset 0 -2px 6px rgba(0,0,0,0.14);
 }
 .btn-choose.active-b {
-  background: linear-gradient(90deg, #9be6ff 0%, #4fc3f7 100%);
-  color: #04263a;
-  box-shadow: 0 8px 20px rgba(79, 195, 247, 0.1);
+  background: linear-gradient(90deg,#62c8ff 0%,#2b9ef3 100%);
+  color: #021826;
+  box-shadow: 0 8px 22px rgba(40,150,240,0.14), inset 0 -2px 6px rgba(0,0,0,0.12);
 }
 .pagination {
   display: flex;
