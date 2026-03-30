@@ -83,14 +83,12 @@ async function mergeServer() {
         else if (m2 && m2[1]) name = m2[1];
         downloadName.value = ensureJwLibraryName(name);
         log.value.unshift("Merge processado, pronto para download: " + out);
-        console.log("[useMergeUI] mergedUrl set (server-fetch):", url);
       } catch (err) {
         // fallback: use server URL directly (might be cross-origin) but still force .jwlibrary name
         const url = downloadMergedUrl(out);
         mergedUrl.value = url;
         downloadName.value = ensureJwLibraryName(name);
         log.value.unshift("Falha ao baixar blob do servidor; usando URL direta: " + (err.message || err));
-        console.log("[useMergeUI] mergedUrl set (server-fallback):", url, err);
       }
     } else {
       log.value.unshift(
@@ -115,7 +113,6 @@ async function mergeLocal() {
     mergedUrl.value = url;
     downloadName.value = ensureJwLibraryName(filename);
     log.value.unshift("Merge local concluído: " + downloadName.value);
-    console.log("[useMergeUI] mergedUrl set (local):", url);
   } catch (err) {
     log.value.unshift("Erro no merge local: " + (err.message || err));
   }
@@ -214,7 +211,6 @@ async function applyChoicesAndMerge() {
     downloadName.value = ensureJwLibraryName(filename);
     log.value.unshift("Merge com escolhas gerado: " + filename);
     log.value.unshift("URL do merge criada (local): " + url);
-    console.log("[useMergeUI] mergedUrl set (with choices):", url);
   } catch (e) {
     log.value.unshift("Erro ao aplicar escolhas: " + (e.message || e));
   }
@@ -251,7 +247,6 @@ async function applyCustomChoices(customChosen) {
     downloadName.value = ensureJwLibraryName(filename);
     log.value.unshift("Merge com escolhas custom gerado: " + filename);
     log.value.unshift("URL do merge criada (local): " + url);
-    console.log("[useMergeUI] mergedUrl set (with custom choices):", url);
   } catch (e) {
     log.value.unshift(
       "Erro ao aplicar escolhas customizadas: " + (e.message || e),
