@@ -30,6 +30,19 @@
     "resultPreview": "Resultado (vista previa):",
     "editResult": "Editar resultado (opcional)"
   },
+  "fields": {
+    "Content": "Contenido",
+    "LastModified": "Última modificación",
+    "Title": "Título",
+    "NoteTitle": "Título de la nota",
+    "Note": "Nota",
+    "NoteContent": "Contenido de la nota",
+    "ChapterAndVerseString": "Capítulo/Versículo",
+    "BookNameChapterAndVerseString": "Libro/Capítulo/Versículo",
+    "PubSymbol": "Publicación",
+    "Name": "Nombre",
+    "Label": "Etiqueta"
+  },
   "pagination": {
     "prev": "Prev",
     "next": "Next",

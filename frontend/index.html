@@ -1,30 +1,33 @@
 <!doctype html>
-<html>
+<html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BACKUP JW (Vue)</title>
-    <!-- Favicon: usar o logo JW (em src/assets/JWLOGO.png) -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="theme-color" content="#071226" />
+
+    <!-- Primary SEO -->
+    <title>JWLMerge — Comparar e Mesclar Backups JW Library</title>
+    <meta name="description" content="JWLMerge: ferramenta para comparar, revisar e mesclar backups do JW Library. Detecte conflitos, escolha versões e gere um arquivo mergeado pronto para download." />
+    <meta name="keywords" content="JW Library, backup, merge, conflitos, mesclar, jwlibrary, ferramentas" />
+    <meta name="author" content="Ednei Trabach" />
+    <link rel="canonical" href="/" />
+
+    <!-- Social / Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="JWLMerge — Comparar e Mesclar Backups JW Library" />
+    <meta property="og:description" content="Detecte conflitos entre backups, escolha versões (A ou B), edite pré-visualizações e gere um arquivo .jwlibrary mesclado." />
+    <meta property="og:url" content="/" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="JWLMerge — Comparar e Mesclar Backups JW Library" />
+    <meta name="twitter:description" content="Ferramenta para comparar e mesclar backups do JW Library com revisão manual de conflitos." />
+
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="/src/assets/JWLOGO.png" />
   </head>
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
-    <script type="module">
-      // Load Vue Devtools standalone in development when running on localhost.
-      // This is injected only in dev by Vite because import.meta.env.DEV is replaced.
-      if (import.meta.env && import.meta.env.DEV) {
-        try {
-          const host = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') ? 'localhost' : window.location.hostname
-          const s = document.createElement('script')
-          s.src = `http://${host}:8098`
-          s.async = true
-          document.head.appendChild(s)
-          console.log('Attempting to load Vue Devtools script from http://' + host + ':8098')
-        } catch (e) {
-          console.warn('Failed to inject Vue Devtools script', e)
-        }
-      }
-    </script>
   </body>
 </html>

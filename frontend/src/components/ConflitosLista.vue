@@ -44,11 +44,17 @@
       <div class="conflict-cols">
         <div class="conflict-col">
           <div class="col-title">{{ $t("conflicts.colATitle") }}</div>
-          <pre class="col-pre">{{ formatDiffValues(c.a, diffKeys(c)) }}</pre>
+          <div
+            class="col-pre"
+            v-html="renderDiffColumn(c.a, c.b, diffKeys(c), 'A')"
+          ></div>
         </div>
         <div class="conflict-col">
           <div class="col-title">{{ $t("conflicts.colBTitle") }}</div>
-          <pre class="col-pre">{{ formatDiffValues(c.b, diffKeys(c)) }}</pre>
+          <div
+            class="col-pre"
+            v-html="renderDiffColumn(c.b, c.a, diffKeys(c), 'B')"
+          ></div>
         </div>
       </div>
       <div class="conflict-actions">
@@ -66,14 +72,17 @@
         >
           {{ $t("conflicts.keepB") }}
         </button>
+        <button class="btn-choose btn-edit" @click.prevent="toggleEditing(c)">
+          {{ isEditing(c) ? "Fechar editor" : "Editar" }}
+        </button>
       </div>
 
       <div class="conflict-result">
-        <div class="result-preview">
+        <div v-if="hasChoice(c)" class="result-preview">
           <div class="result-title">{{ $t("conflicts.resultPreview") }}</div>
           <pre class="col-pre">{{ previewFor(c) }}</pre>
         </div>
-        <div class="result-edit">
+        <div v-if="isEditing(c)" class="result-edit">
           <label class="col-title">{{ $t("conflicts.editResult") }}</label>
           <textarea
             :value="getOverride(c)"
@@ -92,8 +101,21 @@
         :aria-disabled="page <= 1"
         aria-label="previous"
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path
+            d="M15 18l-6-6 6-6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
         <span>{{ $t("pagination.prev") }}</span>
       </button>
@@ -110,8 +132,21 @@
         aria-label="next"
       >
         <span>{{ $t("pagination.next") }}</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path
+            d="M9 6l6 6-6 6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
       </button>
     </div>
@@ -121,6 +156,7 @@
 <script setup>
 import { useMergeUI } from "../composables/useMergeUI";
 import { ref, computed, watch } from "vue";
+import { useI18n } from "vue-i18n";
 const {
   conflicts,
   tableFilter,
@@ -139,6 +175,19 @@ const {
 } = useMergeUI();
 
 const activeFilter = ref(null);
+const { t } = useI18n();
+const editing = ref({});
+function toggleEditing(conflict) {
+  const id = idFor(conflict);
+  editing.value[id] = !editing.value[id];
+}
+function isEditing(conflict) {
+  return !!editing.value[idFor(conflict)];
+}
+function hasChoice(conflict) {
+  const id = idFor(conflict);
+  return !!(choices && choices.value && choices.value[id]);
+}
 function pickAllWithActive(choice) {
   pickAll(choice);
   // toggle: if already active, clear the active filter
@@ -235,6 +284,208 @@ const visiblePicks = computed(() => {
       : null;
   });
 });
+
+// --- Diff rendering helpers (inline word diff using LCS) ---
+function safeStr(v) {
+  if (v === null || v === undefined) return "";
+  if (typeof v === "string") return v;
+  if (typeof v === "object") {
+    try {
+      return JSON.stringify(v);
+    } catch (e) {
+      return String(v);
+    }
+  }
+  try {
+    return String(v);
+  } catch (e) {
+    return "";
+  }
+}
+
+function tokenize(s) {
+  return String(s)
+    .split(/(\s+)/)
+    .filter((t) => t.length > 0);
+}
+
+function lcs(a, b) {
+  const m = a.length,
+    n = b.length;
+  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  for (let i = m - 1; i >= 0; --i) {
+    for (let j = n - 1; j >= 0; --j) {
+      if (a[i] === b[j]) dp[i][j] = 1 + dp[i + 1][j + 1];
+      else dp[i][j] = Math.max(dp[i + 1][j], dp[i][j + 1]);
+    }
+  }
+  // backtrack
+  const seq = [];
+  let i = 0,
+    j = 0;
+  while (i < m && j < n) {
+    if (a[i] === b[j]) {
+      seq.push(a[i]);
+      i++;
+      j++;
+    } else if (dp[i + 1][j] >= dp[i][j + 1]) i++;
+    else j++;
+  }
+  return seq;
+}
+
+function inlineDiffHtml(aStr, bStr, side) {
+  const aTok = tokenize(aStr);
+  const bTok = tokenize(bStr);
+  const common = lcs(aTok, bTok);
+  const out = [];
+  let ic = 0;
+  if (side === "A") {
+    for (let i = 0; i < aTok.length; i++) {
+      const tok = aTok[i];
+      if (ic < common.length && tok === common[ic]) {
+        out.push(escapeHtml(tok));
+        ic++;
+      } else {
+        out.push(`<span class="diff-del">${escapeHtml(tok)}</span>`);
+      }
+    }
+  } else {
+    for (let i = 0; i < bTok.length; i++) {
+      const tok = bTok[i];
+      if (ic < common.length && tok === common[ic]) {
+        out.push(escapeHtml(tok));
+        ic++;
+      } else {
+        out.push(`<span class="diff-ins">${escapeHtml(tok)}</span>`);
+      }
+    }
+  }
+  return out.join("");
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function renderDiffColumn(obj, otherObj, keys, side) {
+  if (!keys || keys.length === 0)
+    return '<div class="diff-empty">(no differing fields)</div>';
+  const lines = [];
+  function getFieldValue(o, k) {
+    if (o === null || o === undefined) return "";
+    // primitive types
+    if (
+      typeof o === "string" ||
+      typeof o === "number" ||
+      typeof o === "boolean"
+    )
+      return o;
+
+    // if it's an object/array, try common property names
+    try {
+      if (Array.isArray(o)) {
+        // prefer first primitive element
+        const first = o.find((x) => x !== null && x !== undefined);
+        return getFieldValue(first, k) || JSON.stringify(o);
+      }
+
+      // direct property (case-sensitive)
+      if (Object.prototype.hasOwnProperty.call(o, k)) return o[k];
+
+      // common nested/text/value properties
+      const prefer = [
+        "Text",
+        "text",
+        "Content",
+        "content",
+        "Value",
+        "value",
+        "Display",
+        "display",
+      ];
+      for (const p of prefer) {
+        if (Object.prototype.hasOwnProperty.call(o, p)) return o[p];
+      }
+
+      // case-insensitive match
+      const lk = k && String(k).toLowerCase();
+      for (const prop of Object.keys(o)) {
+        if (prop.toLowerCase() === lk) return o[prop];
+      }
+
+      // if single prop that's primitive, return it
+      const props = Object.keys(o);
+      if (props.length === 1) {
+        const v = o[props[0]];
+        if (
+          typeof v === "string" ||
+          typeof v === "number" ||
+          typeof v === "boolean"
+        )
+          return v;
+      }
+
+      // fallback to toString if meaningful
+      if (typeof o.toString === "function") {
+        const s = o.toString();
+        if (s && s !== "[object Object]") return s;
+      }
+
+      return JSON.stringify(o);
+    } catch (e) {
+      return "";
+    }
+  }
+
+  for (const k of keys) {
+    const val = safeStr(getFieldValue(obj ? obj : {}, k));
+    const otherVal = safeStr(getFieldValue(otherObj ? otherObj : {}, k));
+    // if both empty
+    if (!val && !otherVal) continue;
+    // if values equal, print plain (show the active column value)
+    if (val === otherVal) {
+      const labelKey = `fields.${k}`;
+      let label = t(labelKey);
+      if (!label || label === labelKey) label = k;
+      lines.push(
+        `<div class="diff-line"><strong>${escapeHtml(label)}</strong>: ${escapeHtml(val)}</div>`,
+      );
+      continue;
+    }
+
+    // special-case: ISO timestamps or whitespace-only — show the active column's raw value
+    const isoRe = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
+    const onlyWhitespace = /^\s*$/;
+    let html = "";
+    if (isoRe.test(val) || isoRe.test(otherVal)) {
+      // show the active column value with appropriate highlight
+      html =
+        side === "A"
+          ? `<span class="diff-del">${escapeHtml(val)}</span>`
+          : `<span class="diff-ins">${escapeHtml(val)}</span>`;
+    } else if (onlyWhitespace.test(val) || onlyWhitespace.test(otherVal)) {
+      // render visible marker for whitespace on the active column
+      html = onlyWhitespace.test(val)
+        ? '<em class="diff-empty">(empty)</em>'
+        : escapeHtml(val);
+    } else {
+      // otherwise compute inline diff where aStr is active column, bStr is other column
+      html = inlineDiffHtml(val, otherVal, side);
+    }
+
+    const labelKey = `fields.${k}`;
+    let label = t(labelKey);
+    if (!label || label === labelKey) label = k;
+    lines.push(
+      `<div class="diff-line"><strong>${escapeHtml(label)}</strong>: ${html}</div>`,
+    );
+  }
+  return `<div class="diff-block">${lines.join("")}</div>`;
+}
 
 watch(
   visiblePicks,
@@ -440,6 +691,38 @@ watch(
   opacity: 0.45;
   cursor: not-allowed;
   filter: grayscale(0.15);
+}
+
+/* diff highlights */
+.diff-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.diff-line {
+  font-size: 12px;
+  color: #e6eef8;
+}
+.diff-line strong {
+  display: inline-block;
+  width: 160px;
+  color: #9fb3c3;
+}
+.diff-ins {
+  background: rgba(34, 197, 94, 0.12);
+  color: #c8ffd6;
+  padding: 0 4px;
+  border-radius: 4px;
+}
+.diff-del {
+  background: rgba(255, 80, 80, 0.12);
+  color: #ffd6d6;
+  padding: 0 4px;
+  border-radius: 4px;
+}
+.diff-empty {
+  color: #9fb3c3;
+  font-style: italic;
 }
 
 @media (min-width: 768px) {
