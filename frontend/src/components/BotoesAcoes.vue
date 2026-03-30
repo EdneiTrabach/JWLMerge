@@ -12,9 +12,18 @@
     <button class="btn btn-primary" @click="detectAndShowConflicts" :disabled="!fileA || !fileB">
       Detectar conflitos
     </button>
-    <button class="btn btn-accent" @click="applyChoicesAndMerge" :disabled="!conflicts.length">
+    <button class="btn btn-accent" @click="onApply" :disabled="!conflicts.length">
       Aplicar escolhas e mesclar
     </button>
+    
+    <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
+      <div class="modal">
+        <h3>Parabéns — Merge gerado!</h3>
+        <p>Seu arquivo de backup foi gerado com sucesso. Clique no botão abaixo para baixar e siga as instruções para instalar no JW Library.</p>
+        <a :href="mergedUrl" :download="downloadName || ''" class="download-btn">Baixar backup</a>
+        <button class="modal-close" @click="showModal = false">Fechar</button>
+      </div>
+    </div>
     <!-- <button @click="downloadMerged" :disabled="!mergedUrl">Baixar merge</button> -->
   </div>
 </template>
@@ -34,6 +43,16 @@ const {
   applyChoicesAndMerge,
   downloadMerged,
 } = useMergeUI();
+
+import { ref } from 'vue'
+
+const showModal = ref(false)
+
+async function onApply() {
+  await applyChoicesAndMerge()
+  // if merge generated, show modal
+  if (mergedUrl && mergedUrl.value) showModal.value = true
+}
 </script>
 
 <style scoped>
@@ -81,5 +100,47 @@ const {
   .actions button {
     width: auto;
   }
+}
+
+/* modal */
+.modal-overlay{
+  position: fixed;
+  inset: 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(2,6,23,0.6);
+  z-index: 1200;
+}
+.modal{
+  background: #09121a;
+  color: #e6eef8;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 520px;
+  width: calc(100% - 40px);
+  box-shadow: 0 14px 40px rgba(2,6,23,0.6);
+  text-align: center;
+}
+.modal h3{ margin-top:0 }
+.download-btn{
+  display:inline-block;
+  margin:12px 0;
+  padding:10px 14px;
+  background: linear-gradient(135deg,#ffb347 0%,#ff8f2a 100%);
+  color:#081014;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:700;
+}
+.modal-close{
+  display:inline-block;
+  margin-left:8px;
+  background:transparent;
+  color:#e6eef8;
+  border:1px solid rgba(230,238,248,0.08);
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
 }
 </style>

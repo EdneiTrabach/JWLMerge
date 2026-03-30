@@ -14,12 +14,16 @@ const { mergedUrl, downloadName } = useMergeUI();
 <style scoped>
 .download {
   margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 .download-link {
   display: inline-block;
   padding: 10px 12px;
   border-radius: 8px;
-  background: var(--primary);
+  background: linear-gradient(135deg,#ffb347 0%,#ff8f2a 100%);
   color: #fff;
   text-decoration: none;
   min-height: 44px;
