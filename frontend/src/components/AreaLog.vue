@@ -5,10 +5,15 @@
 </template>
 
 <script setup>
-import { useMergeUI } from '../composables/useMergeUI'
-const { log } = useMergeUI()
+import { useMergeUI } from "../composables/useMergeUI";
+const { log } = useMergeUI();
 </script>
 
 <style scoped>
-.log { margin-top:12px; font-family:monospace; font-size:13px; color:#dfe7ff }
+.log {
+  margin-top: 12px;
+  font-family: monospace;
+  font-size: 13px;
+  color: #dfe7ff;
+}
 </style>
