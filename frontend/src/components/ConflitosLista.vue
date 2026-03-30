@@ -53,11 +53,15 @@
       </div>
       <div class="conflict-actions">
         <button
+          class="btn-choose"
+          :class="{ 'active-a': isPicked(c, 'A') }"
           @click.prevent="pickChoiceByIndex((page - 1) * perPage + i, 'A')"
         >
           Manter A
         </button>
         <button
+          class="btn-choose"
+          :class="{ 'active-b': isPicked(c, 'B') }"
           @click.prevent="pickChoiceByIndex((page - 1) * perPage + i, 'B')"
         >
           Manter B
@@ -88,6 +92,7 @@ const {
   formatDiffValues,
   diffKeys,
   pickChoiceByIndex,
+  choices,
   page,
   totalPages,
   prevPage,
@@ -98,6 +103,12 @@ const activeFilter = ref(null)
 function pickAllWithActive(choice){
   pickAll(choice)
   activeFilter.value = choice
+}
+
+function isPicked(conflict, pick){
+  if(!conflict) return false
+  const id = `${conflict.table}::${conflict.key}`
+  return choices && choices[id] && choices[id].pick === pick
 }
 </script>
 
@@ -194,6 +205,30 @@ function pickAllWithActive(choice){
 }
 .conflict-actions button {
   min-height: 44px;
+}
+
+/* per-conflict choice buttons */
+.btn-choose{
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  border: 0;
+  cursor: pointer;
+  background: #e6eef8;
+  color: #071226;
+  transition: box-shadow .12s ease, transform .08s ease;
+}
+.btn-choose:active{ transform: translateY(1px) }
+.btn-choose:disabled{ opacity:.6; cursor:not-allowed }
+.btn-choose.active-a{
+  background: linear-gradient(90deg,#ffd27a 0%,#ffb347 100%);
+  color: #111;
+  box-shadow: 0 8px 20px rgba(255,180,60,0.12);
+}
+.btn-choose.active-b{
+  background: linear-gradient(90deg,#9be6ff 0%,#4fc3f7 100%);
+  color: #04263a;
+  box-shadow: 0 8px 20px rgba(79,195,247,0.10);
 }
 .pagination {
   display: flex;
