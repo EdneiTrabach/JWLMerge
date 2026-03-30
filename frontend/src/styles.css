@@ -24,7 +24,8 @@ header h1 {
   --primary-contrast: #ffffff;
   --gap: 12px;
   --radius: 10px;
-  --max-width: 980px;
+    --max-width: 980px;
+}
 
 *,
 *::before,
@@ -63,10 +64,12 @@ body {
   margin: 0 auto;
 }
 .card {
-  background: linear-gradient(180deg, #fff, #f8f8fb);
+  background: linear-gradient(180deg, var(--card-bg), var(--panel-bg));
   padding: 16px;
   border-radius: var(--radius);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 6px 20px rgba(2,6,12,0.6);
+  border: 1px solid rgba(255,255,255,0.03);
+
 }
 
 /* Mobile-first form rows */
@@ -95,9 +98,11 @@ select,
 textarea {
   width: 100%;
   padding: 10px;
-  border: 1px solid #e6e6ee;
+  border: 1px solid rgba(255,255,255,0.06);
   border-radius: 6px;
   font-size: 15px;
+  background: transparent;
+  color: var(--text);
 }
 
 /* Buttons - touch targets */
@@ -115,9 +120,9 @@ textarea {
   cursor: pointer;
 }
 .btn.secondary {
-  background: #f1f1f6;
+  background: transparent;
   color: var(--text);
-  border: 1px solid #e6e6ee;
+  border: 1px solid rgba(255,255,255,0.06);
 }
 
 /* Lists / conflict list */
@@ -132,8 +137,8 @@ textarea {
 .list-item {
   padding: 10px;
   border-radius: 8px;
-  background: #fff;
-  border: 1px solid #f0f0f4;
+  background: var(--card-bg);
+  border: 1px solid rgba(255,255,255,0.03);
 }
 
 /* Responsive tweaks for larger screens */
@@ -163,6 +168,7 @@ textarea {
 /* Utility */
 .hidden {
   display: none;
+}
 .muted {
   color: var(--muted);
   font-size: 14px;
@@ -182,4 +188,4 @@ a {
   color: var(--muted);
   font-family: monospace;
 }
-}
+
