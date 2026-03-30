@@ -30,14 +30,14 @@
         <strong>{{ c.table }}</strong> — {{ c.keyCol }}={{ c.key }}
       </div>
       <div class="conflict-cols">
-        <div class="conflict-col">
+          <div class="conflict-col" style="min-width:0; overflow:hidden;">
           <div class="col-title">A (diferenças abaixo):</div>
           <pre class="col-pre">{{ formatDiffValues(c.a, diffKeys(c)) }}</pre>
         </div>
         <div class="conflict-col">
           <div class="col-title">B (diferenças abaixo):</div>
           <pre class="col-pre">{{ formatDiffValues(c.b, diffKeys(c)) }}</pre>
-        </div>
+            <pre class="col-pre" style="white-space:pre-wrap; font-size:12px; color:#e6eef8; overflow-wrap:anywhere; word-break:break-word; max-width:100%; overflow:auto;">{{ formatDiffValues(c.b, diffKeys(c)) }}</pre>
       </div>
       <div class="conflict-actions">
         <button
