@@ -263,3 +263,10 @@ __pycache__/
 /Installer/Output/JWLMergePortable.zip
 /Installer/Output/JWLMergePortable
 /Installer/Staging
+
+# Temp files created during smoke tests and debugging
+/js.txt
+/tmp_html.txt
+/tmp*.txt
+# Local debug artifacts from Copilot/VSCode workspace storage
+.vscode/**/workspaceStorage/**
