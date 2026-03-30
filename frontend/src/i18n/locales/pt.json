@@ -1,0 +1,53 @@
+{
+  "header": {
+    "title": "Bem-vindo ao Backup JW",
+    "subtitle": "Ferramenta para comparar e mesclar backups do JW Library. Selecione dois arquivos (.jwlibrary), detecte conflitos e aplique escolhas antes de gerar o arquivo final.",
+    "tip": "Dica rápida: carregue os arquivos A e B, clique em \"Detectar conflitos\" e use as escolhas para gerar o merge."
+  },
+  "filePicker": {
+    "fileA": { "label": "Arquivo A (.jwlibrary)" },
+    "fileB": { "label": "Arquivo B (.jwlibrary)" }
+  },
+  "actions": {
+    "detectConflicts": "Detectar conflitos",
+    "applyAndMerge": "Aplicar escolhas e mesclar"
+  },
+  "modal": {
+    "successTitle": "Parabéns — Merge gerado!",
+    "successBody": "Seu arquivo de backup foi gerado com sucesso. Clique no botão abaixo para baixar e siga as instruções para instalar no JW Library.",
+    "downloadButton": "Baixar backup",
+    "close": "Fechar"
+  },
+  "conflicts": {
+    "detected": "Conflitos detectados ({{count}})",
+    "perPageLabel": "Por página:",
+    "colATitle": "A (diferenças abaixo):",
+    "colBTitle": "B (diferenças abaixo):",
+    "keepA": "Manter A",
+    "keepB": "Manter B",
+    "keepAllA": "Manter A para todos",
+    "keepAllB": "Manter B para todos",
+    "resultPreview": "Resultado (preview):",
+    "editResult": "Editar resultado (opcional)"
+  },
+  "pagination": {
+    "prev": "Prev",
+    "next": "Next",
+    "pageInfo": "Página {{page}} / {{total}}"
+  },
+  "download": {
+    "button": "Abrir/baixar arquivo de merge"
+  },
+  "conflictReview": {
+    "title": "Revisar escolhas antes do merge",
+    "help": "Revise cada conflito, edite manualmente o resultado se necessário e adicione uma anotação. Depois clique em \"Confirmar e gerar merge\".",
+    "currentPickLabel": "Escolha atual:",
+    "none": "nenhuma",
+    "previewLabel": "Preview do valor escolhido:",
+    "editLabel": "Editar resultado (opcional)",
+    "noteLabel": "Anotação (opcional)",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar e gerar merge"
+  },
+  "language": "Idioma"
+}

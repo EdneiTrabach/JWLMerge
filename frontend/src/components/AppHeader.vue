@@ -1,23 +1,14 @@
 <template>
   <header class="app-header">
     <div class="header-inner">
-      <h1 class="title">Bem-vindo ao Backup JW</h1>
-      <p class="subtitle">
-        Ferramenta para comparar e mesclar backups do JW Library. Selecione dois
-        arquivos (.jwlibrary), detecte conflitos e aplique escolhas antes de
-        gerar o arquivo final.
-      </p>
-      <p class="hint">
-        Dica rápida: carregue os arquivos A e B, clique em "Detectar conflitos"
-        e use as escolhas para gerar o merge.
-      </p>
+      <h1 class="title">{{ $t("header.title") }}</h1>
+      <p class="subtitle">{{ $t("header.subtitle") }}</p>
+      <p class="hint">{{ $t("header.tip") }}</p>
     </div>
   </header>
 </template>
 
-<script setup>
-// componente simples de apresentação; sem lógica por enquanto
-</script>
+<script setup></script>
 
 <style scoped>
 .app-header {

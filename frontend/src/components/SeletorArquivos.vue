@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="row">
-      <label>Arquivo A (.jwlibrary)</label>
+      <label>{{ $t('filePicker.fileA.label') }}</label>
       <input
         type="file"
         @change="onFileA"
@@ -10,7 +10,7 @@
       />
     </div>
     <div class="row">
-      <label>Arquivo B (.jwlibrary)</label>
+      <label>{{ $t('filePicker.fileB.label') }}</label>
       <input
         type="file"
         @change="onFileB"

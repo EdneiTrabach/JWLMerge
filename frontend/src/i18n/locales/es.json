@@ -1,0 +1,53 @@
+{
+  "header": {
+    "title": "Bienvenido a JW Backup",
+    "subtitle": "Herramienta para comparar y fusionar copias de seguridad de JW Library. Seleccione dos archivos (.jwlibrary), detecte conflictos y aplique elecciones antes de generar el archivo final.",
+    "tip": "Consejo rápido: cargue los archivos A y B, haga clic en \"Detectar conflictos\" y use las elecciones para generar la fusión."
+  },
+  "filePicker": {
+    "fileA": { "label": "Archivo A (.jwlibrary)" },
+    "fileB": { "label": "Archivo B (.jwlibrary)" }
+  },
+  "actions": {
+    "detectConflicts": "Detectar conflictos",
+    "applyAndMerge": "Aplicar elecciones y fusionar"
+  },
+  "modal": {
+    "successTitle": "¡Felicidades — Fusión generada!",
+    "successBody": "Su archivo de copia de seguridad se generó con éxito. Haga clic en el botón a continuación para descargar y siga las instrucciones para instalar en JW Library.",
+    "downloadButton": "Descargar copia de seguridad",
+    "close": "Cerrar"
+  },
+  "conflicts": {
+    "detected": "Conflictos detectados ({{count}})",
+    "perPageLabel": "Por página:",
+    "colATitle": "A (diferencias abajo):",
+    "colBTitle": "B (diferencias abajo):",
+    "keepA": "Mantener A",
+    "keepB": "Mantener B",
+    "keepAllA": "Mantener A para todos",
+    "keepAllB": "Mantener B para todos",
+    "resultPreview": "Resultado (vista previa):",
+    "editResult": "Editar resultado (opcional)"
+  },
+  "pagination": {
+    "prev": "Prev",
+    "next": "Next",
+    "pageInfo": "Página {{page}} / {{total}}"
+  },
+  "download": {
+    "button": "Abrir/descargar archivo de fusión"
+  },
+  "conflictReview": {
+    "title": "Revisar elecciones antes de la fusión",
+    "help": "Revise cada conflicto, edite el resultado manualmente si es necesario y agregue una nota. Luego haga clic en \"Confirmar y generar fusión\".",
+    "currentPickLabel": "Elección actual:",
+    "none": "ninguna",
+    "previewLabel": "Vista previa del valor elegido:",
+    "editLabel": "Editar resultado (opcional)",
+    "noteLabel": "Nota (opcional)",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar y generar fusión"
+  },
+  "language": "Idioma"
+}

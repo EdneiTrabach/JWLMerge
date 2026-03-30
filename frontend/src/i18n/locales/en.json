@@ -1,0 +1,53 @@
+{
+  "header": {
+    "title": "Welcome to JW Backup",
+    "subtitle": "Tool to compare and merge JW Library backups. Select two files (.jwlibrary), detect conflicts and apply choices before generating the final file.",
+    "tip": "Quick tip: load files A and B, click \"Detect conflicts\" and use the choices to generate the merge."
+  },
+  "filePicker": {
+    "fileA": { "label": "File A (.jwlibrary)" },
+    "fileB": { "label": "File B (.jwlibrary)" }
+  },
+  "actions": {
+    "detectConflicts": "Detect conflicts",
+    "applyAndMerge": "Apply choices and merge"
+  },
+  "modal": {
+    "successTitle": "Congrats — Merge generated!",
+    "successBody": "Your backup file was generated successfully. Click the button below to download and follow instructions to install in JW Library.",
+    "downloadButton": "Download backup",
+    "close": "Close"
+  },
+  "conflicts": {
+    "detected": "Conflicts detected ({{count}})",
+    "perPageLabel": "Per page:",
+    "colATitle": "A (differences below):",
+    "colBTitle": "B (differences below):",
+    "keepA": "Keep A",
+    "keepB": "Keep B",
+    "keepAllA": "Keep A for all",
+    "keepAllB": "Keep B for all",
+    "resultPreview": "Result (preview):",
+    "editResult": "Edit result (optional)"
+  },
+  "pagination": {
+    "prev": "Prev",
+    "next": "Next",
+    "pageInfo": "Page {{page}} / {{total}}"
+  },
+  "download": {
+    "button": "Open/download merge file"
+  },
+  "conflictReview": {
+    "title": "Review choices before merge",
+    "help": "Review each conflict, edit the result manually if needed and add a note. Then click \"Confirm and generate merge\".",
+    "currentPickLabel": "Current choice:",
+    "none": "none",
+    "previewLabel": "Preview of chosen value:",
+    "editLabel": "Edit result (optional)",
+    "noteLabel": "Note (optional)",
+    "cancel": "Cancel",
+    "confirm": "Confirm and generate merge"
+  },
+  "language": "Language"
+}

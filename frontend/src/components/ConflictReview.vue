@@ -1,31 +1,31 @@
 <template>
   <div class="review-root">
-    <h3>Revisar escolhas antes do merge</h3>
-    <p class="help">Revise cada conflito, edite manualmente o resultado se necessário e adicione uma anotação. Depois clique em "Confirmar e gerar merge".</p>
+    <h3>{{ $t('conflictReview.title') }}</h3>
+    <p class="help">{{ $t('conflictReview.help') }}</p>
 
     <div v-for="(c, i) in allConflicts" :key="c.table + '::' + c.key" class="review-item">
       <div class="review-header"><strong>{{ c.table }}</strong> — {{ c.keyCol }}={{ c.key }}</div>
       <div class="review-body">
         <div class="review-col">
-          <div class="col-title">Escolha atual:</div>
-          <div class="current-pick">{{ currentPick(c) || 'nenhuma' }}</div>
+          <div class="col-title">{{ $t('conflictReview.currentPickLabel') }}</div>
+          <div class="current-pick">{{ currentPick(c) || $t('conflictReview.none') }}</div>
         </div>
         <div class="review-col">
-          <div class="col-title">Preview do valor escolhido:</div>
+          <div class="col-title">{{ $t('conflictReview.previewLabel') }}</div>
           <pre class="col-pre">{{ previewValue(c) }}</pre>
         </div>
         <div class="review-col edit">
-          <label>Editar resultado (opcional)</label>
+          <label>{{ $t('conflictReview.editLabel') }}</label>
           <textarea v-model="edits[idFor(c)]" rows="3" />
-          <label>Anotação (opcional)</label>
+          <label>{{ $t('conflictReview.noteLabel') }}</label>
           <input v-model="notes[idFor(c)]" type="text" />
         </div>
       </div>
     </div>
 
     <div class="review-actions">
-      <button class="btn" @click="$emit('cancel')">Cancelar</button>
-      <button class="btn btn-primary" @click="confirm">Confirmar e gerar merge</button>
+      <button class="btn" @click="$emit('cancel')">{{ $t('conflictReview.cancel') }}</button>
+      <button class="btn btn-primary" @click="confirm">{{ $t('conflictReview.confirm') }}</button>
     </div>
   </div>
 </template>

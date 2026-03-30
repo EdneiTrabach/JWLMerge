@@ -1,7 +1,7 @@
 <template>
   <!-- <div v-if="mergedUrl" class="download">
     <a :href="mergedUrl" :download="downloadName || ''" class="download-link"
-      >Abrir/baixar arquivo de merge</a
+      >{{ $t('download.button') }}</a
     >
   </div> -->
 </template>

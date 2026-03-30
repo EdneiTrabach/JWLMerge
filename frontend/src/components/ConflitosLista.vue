@@ -1,6 +1,6 @@
 <template>
   <div v-if="conflicts.length" class="conflicts">
-    <h3>Conflitos detectados ({{ conflicts.length }})</h3>
+    <h3>{{ $t('conflictsDetected', { count: conflicts.length }) }}</h3>
     <div class="filters">
       <!-- <label>Filtrar por tabela:</label>
       <select v-model="tableFilter" class="select-table">
@@ -9,7 +9,7 @@
           {{ t }}
         </option>
       </select> -->
-      <label class="label-page">Por página:</label>
+      <label class="label-page">{{ $t('conflicts.perPageLabel') }}</label>
       <select v-model.number="perPage" class="select-page">
         <option :value="6">6</option>
         <option :value="12">12</option>
@@ -21,14 +21,14 @@
           :class="{ 'active-a': activeFilter === 'A' }"
           @click.prevent="pickAllWithActive('A')"
         >
-          Manter A para todos
+          {{ $t('keepA') }} para todos
         </button>
         <button
           class="btn-filter"
           :class="{ 'active-b': activeFilter === 'B' }"
           @click.prevent="pickAllWithActive('B')"
         >
-          Manter B para todos
+          {{ $t('keepB') }} para todos
         </button>
       </div>
     </div>
@@ -43,11 +43,11 @@
       </div>
       <div class="conflict-cols">
         <div class="conflict-col">
-          <div class="col-title">A (diferenças abaixo):</div>
+          <div class="col-title">{{ $t('conflicts.colATitle') }}</div>
           <pre class="col-pre">{{ formatDiffValues(c.a, diffKeys(c)) }}</pre>
         </div>
         <div class="conflict-col">
-          <div class="col-title">B (diferenças abaixo):</div>
+          <div class="col-title">{{ $t('conflicts.colBTitle') }}</div>
           <pre class="col-pre">{{ formatDiffValues(c.b, diffKeys(c)) }}</pre>
         </div>
       </div>
@@ -57,24 +57,24 @@
           :class="{ 'active-a': isPicked(c, 'A') }"
           @click.prevent="pickChoiceByIndex((page - 1) * perPage + i, 'A')"
         >
-          Manter A
+          {{ $t('conflicts.keepA') }}
         </button>
         <button
           class="btn-choose"
           :class="{ 'active-b': isPicked(c, 'B') }"
           @click.prevent="pickChoiceByIndex((page - 1) * perPage + i, 'B')"
         >
-          Manter B
+          {{ $t('conflicts.keepB') }}
         </button>
       </div>
 
       <div class="conflict-result">
         <div class="result-preview">
-          <div class="result-title">Resultado (preview):</div>
+          <div class="result-title">{{ $t('resultPreview') }}</div>
           <pre class="col-pre">{{ previewFor(c) }}</pre>
         </div>
         <div class="result-edit">
-          <label class="col-title">Editar resultado (opcional)</label>
+          <label class="col-title">{{ $t('editResult') }}</label>
           <textarea
             :value="getOverride(c)"
             @input="onEdit($event.target.value, c)"
@@ -85,10 +85,10 @@
     </div>
 
     <div class="pagination">
-      <button @click.prevent="prevPage" :disabled="page <= 1">Prev</button>
-      <div class="page-info">Página {{ page }} / {{ totalPages }}</div>
+      <button @click.prevent="prevPage" :disabled="page <= 1">{{ $t('pagination.prev') }}</button>
+      <div class="page-info">{{ $t('pagination.pageInfo', { page: page, total: totalPages }) }}</div>
       <button @click.prevent="nextPage" :disabled="page >= totalPages">
-        Next
+        {{ $t('pagination.next') }}
       </button>
     </div>
   </div>

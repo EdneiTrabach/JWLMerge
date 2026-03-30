@@ -14,14 +14,14 @@
       @click="detectAndShowConflicts"
       :disabled="!fileA || !fileB"
     >
-      Detectar conflitos
+      {{ $t('actions.detectConflicts') }}
     </button>
     <button
       class="btn btn-accent"
       @click="onApply"
       :disabled="!conflicts.length"
     >
-      Aplicar escolhas e mesclar
+      {{ $t('actions.applyAndMerge') }}
     </button>
 
     <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
@@ -32,18 +32,15 @@
           @cancel="showModal = false"
         />
         <div v-else class="modal-result">
-          <h3>Parabéns — Merge gerado!</h3>
-          <p>
-            Seu arquivo de backup foi gerado com sucesso. Clique no botão abaixo
-            para baixar e siga as instruções para instalar no JW Library.
-          </p>
+          <h3>{{ $t('modal.successTitle') }}</h3>
+          <p>{{ $t('modal.successBody') }}</p>
           <a
             :href="mergedUrl"
             :download="downloadName || ''"
             class="download-btn"
-            >Baixar backup</a
+            >{{ $t('modal.downloadButton') }}</a
           >
-          <button class="modal-close" @click="showModal = false">Fechar</button>
+          <button class="modal-close" @click="showModal = false">{{ $t('modal.close') }}</button>
         </div>
       </div>
     </div>
