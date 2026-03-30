@@ -10,3 +10,59 @@ header h1 {
   font-weight: 600;
   margin-bottom: 6px;
 }
+
+/* Mobile-first base styles */
+:root{
+  --bg: #fff;
+  --text: #222;
+  --muted: #666;
+  --primary: #5b2f8c;
+  --gap: 12px;
+  --radius: 8px;
+  --max-width: 980px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  font-size:16px;line-height:1.4;color:var(--text);background:var(--bg);
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+}
+
+/* Layout containers */
+.app-container{width:100%;padding:16px;max-width:var(--max-width);margin:0 auto}
+.card{background:linear-gradient(180deg,#fff,#f8f8fb);padding:16px;border-radius:var(--radius);box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+
+/* Mobile-first form rows */
+.row{display:flex;flex-direction:column;gap:8px;margin-bottom:var(--gap)}
+.row-inline{display:flex;flex-direction:column;gap:8px}
+.row-inline > *{width:100%}
+
+label{font-weight:600;color:var(--text)}
+input[type='text'],input[type='file'],select,textarea{width:100%;padding:10px;border:1px solid #e6e6ee;border-radius:6px;font-size:15px}
+
+/* Buttons - touch targets */
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:8px;border:0;background:var(--primary);color:#fff;font-weight:600;min-height:44px;cursor:pointer}
+.btn.secondary{background:#f1f1f6;color:var(--text);border:1px solid #e6e6ee}
+
+/* Lists / conflict list */
+.list{padding:0;margin:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.list-item{padding:10px;border-radius:8px;background:#fff;border:1px solid #f0f0f4}
+
+/* Responsive tweaks for larger screens */
+@media(min-width:768px){
+  .row{flex-direction:row;align-items:center}
+  .row > label{width:220px;margin:0}
+  .row > *{flex:1}
+  header h1{font-size:24px}
+}
+
+@media(min-width:1024px){
+  body{font-size:16px}
+}
+
+/* Utility */
+.hidden{display:none}
+.muted{color:var(--muted);font-size:14px}
+
