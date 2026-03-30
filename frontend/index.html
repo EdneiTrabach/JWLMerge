@@ -10,5 +10,21 @@
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
+    <script type="module">
+      // Load Vue Devtools standalone in development when running on localhost.
+      // This is injected only in dev by Vite because import.meta.env.DEV is replaced.
+      if (import.meta.env && import.meta.env.DEV) {
+        try {
+          const host = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') ? 'localhost' : window.location.hostname
+          const s = document.createElement('script')
+          s.src = `http://${host}:8098`
+          s.async = true
+          document.head.appendChild(s)
+          console.log('Attempting to load Vue Devtools script from http://' + host + ':8098')
+        } catch (e) {
+          console.warn('Failed to inject Vue Devtools script', e)
+        }
+      }
+    </script>
   </body>
 </html>

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <header>
-      <h1>BACKUP JW - UI (Vue)</h1>
+      <h1>BACKUP JW</h1>
     </header>
 
     <main>
