@@ -1,8 +1,6 @@
 <template>
   <div class="app-container">
-    <header>
-      <h1>BACKUP JW</h1>
-    </header>
+    <AppHeader />
 
     <main>
       <section class="card">
@@ -21,6 +19,7 @@ import SeletorArquivos from "./SeletorArquivos.vue";
 import BotoesAcoes from "./BotoesAcoes.vue";
 import LinkDownload from "./LinkDownload.vue";
 import ConflitosLista from "./ConflitosLista.vue";
+import AppHeader from "./AppHeader.vue";
 // import AreaLog from "./AreaLog.vue";
 </script>
 
