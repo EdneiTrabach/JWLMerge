@@ -80,7 +80,7 @@
       <div class="conflict-result">
         <div v-if="hasChoice(c)" class="result-preview">
           <div class="result-title">{{ $t("conflicts.resultPreview") }}</div>
-          <pre class="col-pre">{{ previewFor(c) }}</pre>
+          <div class="col-pre" v-html="renderPreviewFor(c)"></div>
         </div>
         <div v-if="isEditing(c)" class="result-edit">
           <label class="col-title">{{ $t("conflicts.editResult") }}</label>
@@ -371,75 +371,56 @@ function escapeHtml(s) {
     .replace(/>/g, "&gt;");
 }
 
-function renderDiffColumn(obj, otherObj, keys, side) {
-  if (!keys || keys.length === 0)
-    return '<div class="diff-empty">(no differing fields)</div>';
-  const lines = [];
-  function getFieldValue(o, k) {
-    if (o === null || o === undefined) return "";
-    // primitive types
-    if (
-      typeof o === "string" ||
-      typeof o === "number" ||
-      typeof o === "boolean"
-    )
-      return o;
-
-    // if it's an object/array, try common property names
-    try {
-      if (Array.isArray(o)) {
-        // prefer first primitive element
-        const first = o.find((x) => x !== null && x !== undefined);
-        return getFieldValue(first, k) || JSON.stringify(o);
-      }
-
-      // direct property (case-sensitive)
-      if (Object.prototype.hasOwnProperty.call(o, k)) return o[k];
-
-      // common nested/text/value properties
-      const prefer = [
-        "Text",
-        "text",
-        "Content",
-        "content",
-        "Value",
-        "value",
-        "Display",
-        "display",
-      ];
-      for (const p of prefer) {
-        if (Object.prototype.hasOwnProperty.call(o, p)) return o[p];
-      }
-
-      // case-insensitive match
-      const lk = k && String(k).toLowerCase();
-      for (const prop of Object.keys(o)) {
-        if (prop.toLowerCase() === lk) return o[prop];
-      }
-
-      // if single prop that's primitive, return it
-      const props = Object.keys(o);
-      if (props.length === 1) {
-        const v = o[props[0]];
-        if (
-          typeof v === "string" ||
-          typeof v === "number" ||
-          typeof v === "boolean"
-        )
-          return v;
-      }
-
-      // fallback to toString if meaningful
-      if (typeof o.toString === "function") {
-        const s = o.toString();
-        if (s && s !== "[object Object]") return s;
-      }
-
-      return JSON.stringify(o);
-    } catch (e) {
-      return "";
+// generic field extractor reused by preview and diff rendering
+function getFieldValue(o, k) {
+  if (o === null || o === undefined) return "";
+  // primitive types
+  if (typeof o === "string" || typeof o === "number" || typeof o === "boolean")
+    return o;
+  try {
+    if (Array.isArray(o)) {
+      const first = o.find((x) => x !== null && x !== undefined);
+      return getFieldValue(first, k) || JSON.stringify(o);
     }
+    if (Object.prototype.hasOwnProperty.call(o, k)) return o[k];
+    const prefer = [
+      "Text",
+      "text",
+      "Content",
+      "content",
+      "Value",
+      "value",
+      "Display",
+      "display",
+    ];
+    for (const p of prefer)
+      if (Object.prototype.hasOwnProperty.call(o, p)) return o[p];
+    const lk = k && String(k).toLowerCase();
+    for (const prop of Object.keys(o))
+      if (prop.toLowerCase() === lk) return o[prop];
+    const props = Object.keys(o);
+    if (props.length === 1) {
+      const v = o[props[0]];
+      if (
+        typeof v === "string" ||
+        typeof v === "number" ||
+        typeof v === "boolean"
+      )
+        return v;
+    }
+    if (typeof o.toString === "function") {
+      const s = o.toString();
+      if (s && s !== "[object Object]") return s;
+    }
+    return JSON.stringify(o);
+  } catch (e) {
+    return "";
   }
+}
+
+function renderDiffColumn(obj, otherObj, keys, side) {
+  if (!keys || keys.length === 0) return '<div class="diff-empty">(no differing fields)</div>';
+  const lines = [];
 
   for (const k of keys) {
     const val = safeStr(getFieldValue(obj ? obj : {}, k));
@@ -485,6 +466,31 @@ function renderDiffColumn(obj, otherObj, keys, side) {
     );
   }
   return `<div class="diff-block">${lines.join("")}</div>`;
+}
+
+function renderPreviewHtml(obj, keys) {
+  if (!keys || keys.length === 0) return '<div class="diff-empty">(no differing fields)</div>';
+  const lines = [];
+  for (const k of keys) {
+    const v = safeStr(getFieldValue(obj ? obj : {}, k));
+    if (!v) continue;
+    const labelKey = `fields.${k}`;
+    let label = t(labelKey);
+    if (!label || label === labelKey) label = k;
+    lines.push(`<div class="diff-line"><strong>${escapeHtml(label)}</strong>: ${escapeHtml(v)}</div>`);
+  }
+  return `<div class="diff-block">${lines.join("")}</div>`;
+}
+
+function renderPreviewFor(conflict) {
+  const id = idFor(conflict);
+  const ch = choices && choices.value && choices.value[id];
+  if (ch && ch.override) return `<pre class="col-pre">${escapeHtml(ch.override)}</pre>`;
+  const pick = ch && ch.pick ? ch.pick : null;
+  const keys = diffKeys(conflict);
+  if (pick === "A") return renderPreviewHtml(conflict.a, keys);
+  if (pick === "B") return renderPreviewHtml(conflict.b, keys);
+  return '<div class="diff-empty">(no choice)</div>';
 }
 
 watch(
