@@ -39,7 +39,7 @@
       class="conflict-item"
     >
       <div class="conflict-header">
-        <strong>{{ c.table }}</strong> — {{ c.keyCol }}={{ c.key }}
+        <strong>{{ c.table }}</strong> — {{ displayName(c) }}
       </div>
       <div class="conflict-cols">
         <div class="conflict-col">
@@ -134,6 +134,38 @@ function isPicked(conflict, pick) {
 
 function idFor(conflict) {
   return `${conflict.table}::${conflict.key}`;
+}
+
+function truncateText(s, max = 80) {
+  if (s == null) return ''
+  const str = String(s).replace(/\r?\n+/g, ' ').trim()
+  return str.length > max ? str.slice(0, max) + '...' : str
+}
+
+function displayName(conflict) {
+  if (!conflict) return ''
+  const a = conflict.a || {}
+  const b = conflict.b || {}
+  const candidates = [
+    'Title',
+    'NoteTitle',
+    'Note',
+    'Content',
+    'NoteContent',
+    'ChapterAndVerseString',
+    'BookNameChapterAndVerseString',
+    'PubSymbol',
+    'Name',
+    'Label'
+  ]
+  for (const k of candidates) {
+    const v = a[k] ?? b[k]
+    if (v !== undefined && v !== null && String(v).trim() !== '') {
+      return truncateText(v)
+    }
+  }
+  // fallback to key column/value if no descriptive field found
+  return `${conflict.keyCol}=${conflict.key}`
 }
 
 function getOverride(conflict) {
