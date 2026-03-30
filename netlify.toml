@@ -1,0 +1,9 @@
+# Netlify build configuration for the monorepo frontend
+[build]
+  base = "frontend"
+  publish = "frontend/dist"
+  command = "npm run build"
+
+[context.production.environment]
+# Add any env vars needed for production builds here, e.g.: 
+# NODE_ENV = "production"
