@@ -18,14 +18,14 @@
       <div class="filter-actions">
         <button
           class="btn-filter"
-          :class="{ 'active-a': activeFilter === 'A', 'active-b': activeFilter === 'B' }"
+          :class="{ 'active-a': activeFilter === 'A' }"
           @click.prevent="pickAllWithActive('A')"
         >
           Manter A para todos
         </button>
         <button
           class="btn-filter"
-          :class="{ 'active-a': activeFilter === 'A', 'active-b': activeFilter === 'B' }"
+          :class="{ 'active-b': activeFilter === 'B' }"
           @click.prevent="pickAllWithActive('B')"
         >
           Manter B para todos
@@ -102,7 +102,8 @@ const {
 const activeFilter = ref(null)
 function pickAllWithActive(choice){
   pickAll(choice)
-  activeFilter.value = choice
+  // toggle: if already active, clear the active filter
+  activeFilter.value = (activeFilter.value === choice) ? null : choice
 }
 
 function isPicked(conflict, pick){
