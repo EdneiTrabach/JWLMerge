@@ -19,7 +19,7 @@
     "close": "Fechar"
   },
   "conflicts": {
-    "detected": "Conflitos detectados ({{count}})",
+    "detected": "Conflitos detectados ({count})",
     "perPageLabel": "Por página:",
     "colATitle": "A (diferenças abaixo):",
     "colBTitle": "B (diferenças abaixo):",
@@ -33,7 +33,7 @@
   "pagination": {
     "prev": "Prev",
     "next": "Next",
-    "pageInfo": "Página {{page}} / {{total}}"
+    "pageInfo": "Página {page} / {total}"
   },
   "download": {
     "button": "Abrir/baixar arquivo de merge"
@@ -50,4 +50,56 @@
     "confirm": "Confirmar e gerar merge"
   },
   "language": "Idioma"
+
+  ,
+  "log": {
+    "fileASelected": "Arquivo A selecionado: {name}",
+    "fileBSelected": "Arquivo B selecionado: {name}",
+    "noFileForInspect": "Nenhum arquivo selecionado para inspeção",
+    "inspecting": "Inspecionando {name} (sql.js + JSZip)",
+    "integrity": "integrity: {val}",
+    "manifestRead": "manifest lido",
+    "noTables": "Nenhuma tabela detectada",
+    "tableCount": "{table}: {count} linhas",
+    "uploadingToServer": "Enviando arquivos para merge no servidor...",
+    "serverResponse": "Resposta do servidor: {resp}",
+    "serverProcessed": "Merge processado, pronto para download: {out}",
+    "serverUnexpected": "Resposta inesperada do servidor: {resp}",
+    "mergeLocalStart": "Iniciando merge local...",
+    "mergeLocalDone": "Merge local concluído: {name}",
+    "detectingConflicts": "Detectando conflitos entre arquivos...",
+    "conflictsDetected": "Conflitos detectados: {count}",
+    "selectFiles": "Selecione os arquivos A e B antes de mesclar",
+    "startFullMerge": "Iniciando fluxo de mesclagem 100% no front (prefer={prefer})",
+    "noConflictsFound": "Nenhum conflito detectado; executando merge direto",
+    "conflictsAwaitManual": "Conflitos detectados — aguarde escolhas manuais",
+    "applyingPreference": "Aplicando prefer='{prefer}' para todos os conflitos e gerando merge",
+    "chosen": "Escolhido {pick} para {table}#{key}",
+    "appliedForList": "Aplicado '{pick}' para {count} conflitos visíveis",
+    "noChoices": "Nenhuma escolha feita; nada a aplicar",
+    "applyingChoices": "Aplicando escolhas e gerando merge local...",
+    "summaryChoices": "Resumo escolhas: total={total} A={A} B={B}",
+    "sampleChoices": "Amostra escolhas: {sample}",
+    "mergeWithChoicesDone": "Merge com escolhas gerado: {filename}",
+    "urlCreated": "URL do merge criada (local): {url}",
+    "errorApplyChoices": "Erro ao aplicar escolhas: {msg}",
+    "noCustomChoices": "Nenhuma escolha customizada fornecida; nada a aplicar",
+    "applyingCustomChoices": "Aplicando escolhas customizadas e gerando merge local...",
+    "summaryCustomChoices": "Resumo escolhas custom: total={total} A={A} B={B}",
+    "sampleCustomChoices": "Amostra escolhas custom: {sample}",
+    "mergeCustomDone": "Merge com escolhas custom gerado: {filename}",
+    "noMergedFile": "Nenhum arquivo mergeado disponível para download",
+    "startingBlobDownload": "Iniciando download (blob): {name}",
+    "startingDownload": "Iniciando download: {nameOrUrl}",
+    "errorStartDownload": "Falha ao iniciar download: {msg}"
+  },
+  "errors": {
+    "noFileProvided": "Nenhum arquivo fornecido",
+    "userDataMissing": "userData.db não encontrado no arquivo .jwlibrary",
+    "noFilesToMerge": "Nenhum arquivo para mesclar",
+    "integrityFailed": "PRAGMA integrity_check falhou: {val}"
+  }
 }
+
+
+

@@ -19,7 +19,7 @@
     "close": "Cerrar"
   },
   "conflicts": {
-    "detected": "Conflictos detectados ({{count}})",
+    "detected": "Conflictos detectados ({count})",
     "perPageLabel": "Por página:",
     "colATitle": "A (diferencias abajo):",
     "colBTitle": "B (diferencias abajo):",
@@ -33,7 +33,7 @@
   "pagination": {
     "prev": "Prev",
     "next": "Next",
-    "pageInfo": "Página {{page}} / {{total}}"
+    "pageInfo": "Página {page} / {total}"
   },
   "download": {
     "button": "Abrir/descargar archivo de fusión"

@@ -1,6 +1,6 @@
 <template>
   <div v-if="conflicts.length" class="conflicts">
-    <h3>{{ $t('conflictsDetected', { count: conflicts.length }) }}</h3>
+    <h3>{{ $t("conflicts.detected", { count: conflicts.length }) }}</h3>
     <div class="filters">
       <!-- <label>Filtrar por tabela:</label>
       <select v-model="tableFilter" class="select-table">
@@ -9,11 +9,11 @@
           {{ t }}
         </option>
       </select> -->
-      <label class="label-page">{{ $t('conflicts.perPageLabel') }}</label>
+      <label class="label-page">{{ $t("conflicts.perPageLabel") }}</label>
       <select v-model.number="perPage" class="select-page">
-        <option :value="6">6</option>
-        <option :value="12">12</option>
-        <option :value="24">24</option>
+        <option :value="6">20</option>
+        <option :value="12">40</option>
+        <option :value="24">100</option>
       </select>
       <div class="filter-actions">
         <button
@@ -21,14 +21,14 @@
           :class="{ 'active-a': activeFilter === 'A' }"
           @click.prevent="pickAllWithActive('A')"
         >
-          {{ $t('keepA') }} para todos
+          {{ $t("conflicts.keepAllA") }}
         </button>
         <button
           class="btn-filter"
           :class="{ 'active-b': activeFilter === 'B' }"
           @click.prevent="pickAllWithActive('B')"
         >
-          {{ $t('keepB') }} para todos
+          {{ $t("conflicts.keepAllB") }}
         </button>
       </div>
     </div>
@@ -43,11 +43,11 @@
       </div>
       <div class="conflict-cols">
         <div class="conflict-col">
-          <div class="col-title">{{ $t('conflicts.colATitle') }}</div>
+          <div class="col-title">{{ $t("conflicts.colATitle") }}</div>
           <pre class="col-pre">{{ formatDiffValues(c.a, diffKeys(c)) }}</pre>
         </div>
         <div class="conflict-col">
-          <div class="col-title">{{ $t('conflicts.colBTitle') }}</div>
+          <div class="col-title">{{ $t("conflicts.colBTitle") }}</div>
           <pre class="col-pre">{{ formatDiffValues(c.b, diffKeys(c)) }}</pre>
         </div>
       </div>
@@ -57,24 +57,24 @@
           :class="{ 'active-a': isPicked(c, 'A') }"
           @click.prevent="pickChoiceByIndex((page - 1) * perPage + i, 'A')"
         >
-          {{ $t('conflicts.keepA') }}
+          {{ $t("conflicts.keepA") }}
         </button>
         <button
           class="btn-choose"
           :class="{ 'active-b': isPicked(c, 'B') }"
           @click.prevent="pickChoiceByIndex((page - 1) * perPage + i, 'B')"
         >
-          {{ $t('conflicts.keepB') }}
+          {{ $t("conflicts.keepB") }}
         </button>
       </div>
 
       <div class="conflict-result">
         <div class="result-preview">
-          <div class="result-title">{{ $t('resultPreview') }}</div>
+          <div class="result-title">{{ $t("conflicts.resultPreview") }}</div>
           <pre class="col-pre">{{ previewFor(c) }}</pre>
         </div>
         <div class="result-edit">
-          <label class="col-title">{{ $t('editResult') }}</label>
+          <label class="col-title">{{ $t("conflicts.editResult") }}</label>
           <textarea
             :value="getOverride(c)"
             @input="onEdit($event.target.value, c)"
@@ -85,10 +85,34 @@
     </div>
 
     <div class="pagination">
-      <button @click.prevent="prevPage" :disabled="page <= 1">{{ $t('pagination.prev') }}</button>
-      <div class="page-info">{{ $t('pagination.pageInfo', { page: page, total: totalPages }) }}</div>
-      <button @click.prevent="nextPage" :disabled="page >= totalPages">
-        {{ $t('pagination.next') }}
+      <button
+        class="btn-page prev"
+        @click.prevent="prevPage"
+        :disabled="page <= 1"
+        :aria-disabled="page <= 1"
+        aria-label="previous"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span>{{ $t("pagination.prev") }}</span>
+      </button>
+
+      <div class="page-info">
+        {{ $t("pagination.pageInfo", { page: page, total: totalPages }) }}
+      </div>
+
+      <button
+        class="btn-page next"
+        @click.prevent="nextPage"
+        :disabled="page >= totalPages"
+        :aria-disabled="page >= totalPages"
+        aria-label="next"
+      >
+        <span>{{ $t("pagination.next") }}</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
       </button>
     </div>
   </div>
@@ -137,35 +161,37 @@ function idFor(conflict) {
 }
 
 function truncateText(s, max = 80) {
-  if (s == null) return ''
-  const str = String(s).replace(/\r?\n+/g, ' ').trim()
-  return str.length > max ? str.slice(0, max) + '...' : str
+  if (s == null) return "";
+  const str = String(s)
+    .replace(/\r?\n+/g, " ")
+    .trim();
+  return str.length > max ? str.slice(0, max) + "..." : str;
 }
 
 function displayName(conflict) {
-  if (!conflict) return ''
-  const a = conflict.a || {}
-  const b = conflict.b || {}
+  if (!conflict) return "";
+  const a = conflict.a || {};
+  const b = conflict.b || {};
   const candidates = [
-    'Title',
-    'NoteTitle',
-    'Note',
-    'Content',
-    'NoteContent',
-    'ChapterAndVerseString',
-    'BookNameChapterAndVerseString',
-    'PubSymbol',
-    'Name',
-    'Label'
-  ]
+    "Title",
+    "NoteTitle",
+    "Note",
+    "Content",
+    "NoteContent",
+    "ChapterAndVerseString",
+    "BookNameChapterAndVerseString",
+    "PubSymbol",
+    "Name",
+    "Label",
+  ];
   for (const k of candidates) {
-    const v = a[k] ?? b[k]
-    if (v !== undefined && v !== null && String(v).trim() !== '') {
-      return truncateText(v)
+    const v = a[k] ?? b[k];
+    if (v !== undefined && v !== null && String(v).trim() !== "") {
+      return truncateText(v);
     }
   }
   // fallback to key column/value if no descriptive field found
-  return `${conflict.keyCol}=${conflict.key}`
+  return `${conflict.keyCol}=${conflict.key}`;
 }
 
 function getOverride(conflict) {
@@ -243,7 +269,16 @@ watch(
   width: 100%;
   padding: 8px;
   border-radius: 6px;
-  border: 1px solid #e6e6ee;
+  border: 1px solid #23313a;
+  background: #071226;
+  color: #e6eef8;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.select-page option,
+.select-table option {
+  background: #071226;
+  color: #e6eef8;
 }
 .filter-actions {
   display: flex;
@@ -375,6 +410,36 @@ watch(
 .page-info {
   flex: 1;
   text-align: center;
+}
+
+/* styled pagination buttons */
+.btn-page {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 0;
+  font-weight: 700;
+  cursor: pointer;
+  color: #fff;
+  min-width: 84px;
+}
+.btn-page svg {
+  display: block;
+  color: #fff;
+}
+.btn-page.prev {
+  background: linear-gradient(90deg, #ffb347 0%, #ff8f2a 100%);
+}
+.btn-page.next {
+  background: linear-gradient(90deg, #62c8ff 0%, #2b9ef3 100%);
+}
+.btn-page:disabled,
+.btn-page[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.15);
 }
 
 @media (min-width: 768px) {

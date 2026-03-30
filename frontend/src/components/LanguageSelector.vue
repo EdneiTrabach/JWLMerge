@@ -1,7 +1,7 @@
 <template>
   <div class="language-selector">
     <label>{{ $t('language') }}:</label>
-    <select v-model="current" @change="onChange">
+    <select v-model="current" @change="onChange" class="select-page">
       <option value="pt-BR">Português (PT-BR)</option>
       <option value="en">English</option>
       <option value="es">Español</option>
@@ -33,5 +33,18 @@ function onChange() {
   align-items:center;
   margin-bottom:8px;
 }
-select{padding:6px;border-radius:6px}
+.select-page {
+  width: auto;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #23313a;
+  background: #071226;
+  color: #e6eef8;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.select-page option {
+  background: #071226;
+  color: #e6eef8;
+}
 </style>

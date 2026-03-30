@@ -19,7 +19,7 @@
     "close": "Close"
   },
   "conflicts": {
-    "detected": "Conflicts detected ({{count}})",
+    "detected": "Conflicts detected ({count})",
     "perPageLabel": "Per page:",
     "colATitle": "A (differences below):",
     "colBTitle": "B (differences below):",
@@ -33,7 +33,7 @@
   "pagination": {
     "prev": "Prev",
     "next": "Next",
-    "pageInfo": "Page {{page}} / {{total}}"
+    "pageInfo": "Page {page} / {total}"
   },
   "download": {
     "button": "Open/download merge file"
@@ -51,3 +51,6 @@
   },
   "language": "Language"
 }
+
+
+
