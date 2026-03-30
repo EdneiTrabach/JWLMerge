@@ -16,8 +16,20 @@
         <option :value="24">24</option>
       </select>
       <div class="filter-actions">
-        <button @click.prevent="pickAll('A')">Manter A para todos</button>
-        <button @click.prevent="pickAll('B')">Manter B para todos</button>
+        <button
+          class="btn-filter"
+          :class="{ 'active-a': activeFilter === 'A', 'active-b': activeFilter === 'B' }"
+          @click.prevent="pickAllWithActive('A')"
+        >
+          Manter A para todos
+        </button>
+        <button
+          class="btn-filter"
+          :class="{ 'active-a': activeFilter === 'A', 'active-b': activeFilter === 'B' }"
+          @click.prevent="pickAllWithActive('B')"
+        >
+          Manter B para todos
+        </button>
       </div>
     </div>
 
@@ -65,6 +77,7 @@
 
 <script setup>
 import { useMergeUI } from "../composables/useMergeUI";
+import { ref } from 'vue'
 const {
   conflicts,
   tableFilter,
@@ -80,6 +93,12 @@ const {
   prevPage,
   nextPage,
 } = useMergeUI();
+
+const activeFilter = ref(null)
+function pickAllWithActive(choice){
+  pickAll(choice)
+  activeFilter.value = choice
+}
 </script>
 
 <style scoped>
@@ -109,6 +128,30 @@ const {
 }
 .filter-actions button {
   min-height: 44px;
+}
+
+/* filter action buttons */
+.btn-filter{
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  border: 0;
+  cursor: pointer;
+  color: #0b1220;
+  background: #e6eef8;
+  transition: transform .08s ease, box-shadow .12s ease, opacity .12s ease;
+}
+.btn-filter:active{ transform: translateY(1px) }
+.btn-filter:disabled{ opacity:.6; cursor:not-allowed }
+.btn-filter.active-a{
+  background: linear-gradient(90deg,#ffd27a 0%,#ffb347 100%);
+  color: #111;
+  box-shadow: 0 8px 20px rgba(255,180,60,0.15);
+}
+.btn-filter.active-b{
+  background: linear-gradient(90deg,#9be6ff 0%,#4fc3f7 100%);
+  color: #04263a;
+  box-shadow: 0 8px 20px rgba(79,195,247,0.12);
 }
 .conflict-item {
   margin-bottom: 10px;
