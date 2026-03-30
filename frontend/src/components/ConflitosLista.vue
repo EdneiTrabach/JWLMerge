@@ -109,14 +109,14 @@ function pickAllWithActive(choice) {
 function isPicked(conflict, pick) {
   if (!conflict) return false;
   const id = `${conflict.table}::${conflict.key}`;
-  return choices && choices[id] && choices[id].pick === pick;
+  return choices && choices.value && choices.value[id] && choices.value[id].pick === pick;
 }
 
 // Sync the filter active state with visible choices on the current page.
 const visiblePicks = computed(() => {
   return pagedConflicts.value.map(c => {
     const id = `${c.table}::${c.key}`
-    return choices && choices[id] ? choices[id].pick : null
+    return choices && choices.value && choices.value[id] ? choices.value[id].pick : null
   })
 })
 
