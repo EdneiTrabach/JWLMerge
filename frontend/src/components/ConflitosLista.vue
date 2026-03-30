@@ -72,7 +72,11 @@
         >
           {{ $t("conflicts.keepB") }}
         </button>
-        <button class="btn-choose btn-edit" @click.prevent="toggleEditing(c)">
+        <button
+          class="btn-choose btn-edit"
+          :class="{ 'editing-active': isEditing(c) }"
+          @click.prevent="toggleEditing(c)"
+        >
           {{ isEditing(c) ? "Fechar editor" : "Editar" }}
         </button>
       </div>
@@ -772,6 +776,37 @@ watch(
   box-shadow:
     0 8px 22px rgba(40, 150, 240, 0.14),
     inset 0 -2px 6px rgba(0, 0, 0, 0.12);
+}
+
+/* edit area when active: light orange background */
+.result-edit {
+  background: linear-gradient(90deg, #fff2e0 0%, #ffe6cc 100%);
+  border: 1px solid #ffd2a8;
+  color: #331a00;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+/* ensure textarea and label inside edit box have readable black text */
+.result-edit .col-title {
+  color: #231400; /* dark label */
+}
+.result-edit textarea {
+  width: 100%;
+  background: #ffffff;
+  color: #000000; /* black text as requested */
+  border: 1px solid #ffd2a8;
+  padding: 8px;
+  border-radius: 6px;
+  resize: vertical;
+}
+
+/* edit button active state */
+.btn-edit.editing-active {
+  background: linear-gradient(90deg, #ffd39b 0%, #ffb86b 100%);
+  color: #231400;
+  box-shadow: 0 8px 22px rgba(255, 160, 40, 0.18), inset 0 -2px 6px rgba(0,0,0,0.08);
 }
 .pagination {
   display: flex;

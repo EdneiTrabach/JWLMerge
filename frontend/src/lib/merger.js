@@ -66,7 +66,28 @@ export async function mergeJwlFiles(files, { progress } = {}) {
   if (manifestStr) outZip.file('manifest.json', manifestStr)
   outZip.file('userData.db', outU8)
 
+  // debug: list files that will be in the output archive
+  try {
+    console.log('[merger] Preparing output zip; manifest present=', !!manifestStr)
+    console.log('[merger] outZip entries=', Object.keys(outZip.files))
+  } catch (e) {
+    console.warn('[merger] failed to list outZip entries', e)
+  }
+
   const blob = await outZip.generateAsync({ type: 'blob' })
+
+  try {
+    console.log('[merger] generated blob type=', blob.type, 'size=', blob.size)
+    const ab = await blob.arrayBuffer()
+    const header = new Uint8Array(ab.slice(0, 4))
+    const headerHex = Array.from(header).map(b => b.toString(16).padStart(2, '0')).join(' ')
+    console.log('[merger] blob header bytes (first 4)=', headerHex)
+    const isZip = header[0] === 0x50 && header[1] === 0x4b && header[2] === 0x03 && header[3] === 0x04
+    console.log('[merger] looksLikeZip=', !!isZip)
+  } catch (e) {
+    console.warn('[merger] failed to inspect blob header', e)
+  }
+
   return { blob, filename: 'merged.jwlibrary' }
 }
 
@@ -148,16 +169,65 @@ export async function mergeWithChoices(fileA, fileB, choices, { progress } = {})
 
   // apply choices where pick === 'B'
   for (const c of choices) {
-    if (c.pick !== 'B') continue
     const t = c.table
     const keyCol = c.keyCol
     const key = c.key
-    // fetch row from B
-    const sel = bDb.exec(`SELECT * FROM "${t}" WHERE "${keyCol}" = ${quoteValue(key)}`)
+
+    // choose source DB based on pick
+    const sourceDb = c.pick === 'B' ? bDb : aDb
+    const sel = sourceDb.exec(`SELECT * FROM "${t}" WHERE "${keyCol}" = ${quoteValue(key)}`)
     if (!sel || !sel[0]) continue
     const rowObj = toRowObjects(sel[0])[0]
     const cols = Object.keys(rowObj)
-    // delete existing row in destDb and insert values from B
+
+    // if override provided, attempt to apply into most likely text column
+    if (c.override && typeof c.override === 'string') {
+      const prefer = [
+        'Content', 'content', 'Text', 'text', 'Value', 'value', 'Note', 'NoteContent', 'Display', 'display'
+      ]
+      let targetCol = null
+      for (const p of prefer) if (cols.includes(p)) { targetCol = p; break }
+      if (!targetCol) {
+        // fallback: first non-id string column
+        for (const colName of cols) {
+          const ln = colName.toLowerCase()
+          if (ln === keyCol.toLowerCase()) continue
+          if (ln.endsWith('id')) continue
+          const v = rowObj[colName]
+          if (typeof v === 'string') { targetCol = colName; break }
+        }
+      }
+      if (targetCol) {
+        rowObj[targetCol] = c.override
+      }
+
+      // update LastModified/TimeLastModified fields if present
+      try {
+        const iso = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z')
+        if (Object.prototype.hasOwnProperty.call(rowObj, 'TimeLastModified')) {
+          rowObj['TimeLastModified'] = iso
+        } else if (Object.prototype.hasOwnProperty.call(rowObj, 'LastModified')) {
+          // if LastModified stored as JSON string, try to parse and update TimeLastModified inside
+          const lm = rowObj['LastModified']
+          try {
+            const parsed = typeof lm === 'string' ? JSON.parse(lm) : lm
+            if (parsed && typeof parsed === 'object') {
+              parsed.TimeLastModified = iso
+              rowObj['LastModified'] = JSON.stringify(parsed)
+            } else {
+              rowObj['LastModified'] = iso
+            }
+          } catch (e) {
+            // not JSON, just set string
+            rowObj['LastModified'] = iso
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    // delete existing row in destDb and insert updated values
     destDb.run(`DELETE FROM "${t}" WHERE "${keyCol}" = ${quoteValue(key)}`)
     const insertSql = `INSERT INTO "${t}" (${cols.map(cn => `"${cn}"`).join(',')}) VALUES (${cols.map(() => '?').join(',')})`
     const stmt = destDb.prepare(insertSql)
@@ -194,7 +264,27 @@ export async function mergeWithChoices(fileA, fileB, choices, { progress } = {})
   const manifestStr = za.file('manifest.json') ? await za.file('manifest.json').async('string') : null
   if (manifestStr) outZip.file('manifest.json', manifestStr)
   outZip.file('userData.db', outU8)
+  // debug: log what will be in the output
+  try {
+    console.log('[merger] (with choices) manifest present=', !!manifestStr)
+    console.log('[merger] (with choices) outZip entries=', Object.keys(outZip.files))
+  } catch (e) {
+    console.warn('[merger] (with choices) failed to list outZip entries', e)
+  }
+
   const blob = await outZip.generateAsync({ type: 'blob' })
+  try {
+    console.log('[merger] (with choices) generated blob type=', blob.type, 'size=', blob.size)
+    const ab = await blob.arrayBuffer()
+    const header = new Uint8Array(ab.slice(0, 4))
+    const headerHex = Array.from(header).map(b => b.toString(16).padStart(2, '0')).join(' ')
+    console.log('[merger] (with choices) blob header bytes (first 4)=', headerHex)
+    const isZip = header[0] === 0x50 && header[1] === 0x4b && header[2] === 0x03 && header[3] === 0x04
+    console.log('[merger] (with choices) looksLikeZip=', !!isZip)
+  } catch (e) {
+    console.warn('[merger] (with choices) failed to inspect blob header', e)
+  }
+
   return { blob, filename: 'merged-with-choices.jwlibrary', integrity: 'ok' }
 }
 
