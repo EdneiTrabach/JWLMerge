@@ -66,28 +66,7 @@ export async function mergeJwlFiles(files, { progress } = {}) {
   if (manifestStr) outZip.file('manifest.json', manifestStr)
   outZip.file('userData.db', outU8)
 
-  // debug: list files that will be in the output archive
-  try {
-    console.log('[merger] Preparing output zip; manifest present=', !!manifestStr)
-    console.log('[merger] outZip entries=', Object.keys(outZip.files))
-  } catch (e) {
-    console.warn('[merger] failed to list outZip entries', e)
-  }
-
   const blob = await outZip.generateAsync({ type: 'blob' })
-
-  try {
-    console.log('[merger] generated blob type=', blob.type, 'size=', blob.size)
-    const ab = await blob.arrayBuffer()
-    const header = new Uint8Array(ab.slice(0, 4))
-    const headerHex = Array.from(header).map(b => b.toString(16).padStart(2, '0')).join(' ')
-    console.log('[merger] blob header bytes (first 4)=', headerHex)
-    const isZip = header[0] === 0x50 && header[1] === 0x4b && header[2] === 0x03 && header[3] === 0x04
-    console.log('[merger] looksLikeZip=', !!isZip)
-  } catch (e) {
-    console.warn('[merger] failed to inspect blob header', e)
-  }
-
   return { blob, filename: 'merged.jwlibrary' }
 }
 
@@ -255,6 +234,8 @@ export async function mergeWithChoices(fileA, fileB, choices, { progress } = {})
     throw e
   }
 
+  // (debug scan removed)
+
   const outU8 = destDb.export()
   destDb.close()
   bDb.close()
@@ -264,27 +245,7 @@ export async function mergeWithChoices(fileA, fileB, choices, { progress } = {})
   const manifestStr = za.file('manifest.json') ? await za.file('manifest.json').async('string') : null
   if (manifestStr) outZip.file('manifest.json', manifestStr)
   outZip.file('userData.db', outU8)
-  // debug: log what will be in the output
-  try {
-    console.log('[merger] (with choices) manifest present=', !!manifestStr)
-    console.log('[merger] (with choices) outZip entries=', Object.keys(outZip.files))
-  } catch (e) {
-    console.warn('[merger] (with choices) failed to list outZip entries', e)
-  }
-
   const blob = await outZip.generateAsync({ type: 'blob' })
-  try {
-    console.log('[merger] (with choices) generated blob type=', blob.type, 'size=', blob.size)
-    const ab = await blob.arrayBuffer()
-    const header = new Uint8Array(ab.slice(0, 4))
-    const headerHex = Array.from(header).map(b => b.toString(16).padStart(2, '0')).join(' ')
-    console.log('[merger] (with choices) blob header bytes (first 4)=', headerHex)
-    const isZip = header[0] === 0x50 && header[1] === 0x4b && header[2] === 0x03 && header[3] === 0x04
-    console.log('[merger] (with choices) looksLikeZip=', !!isZip)
-  } catch (e) {
-    console.warn('[merger] (with choices) failed to inspect blob header', e)
-  }
-
   return { blob, filename: 'merged-with-choices.jwlibrary', integrity: 'ok' }
 }
 
