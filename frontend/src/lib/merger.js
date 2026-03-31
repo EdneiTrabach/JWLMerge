@@ -143,6 +143,7 @@ export async function mergeWithChoices(fileA, fileB, choices, { progress } = {})
   const bU8 = await zb.file('userData.db').async('uint8array')
 
   // start from A as base
+  const aDb = new SQL.Database(aU8)
   const destDb = new SQL.Database(aU8)
   const bDb = new SQL.Database(bU8)
 
@@ -239,6 +240,7 @@ export async function mergeWithChoices(fileA, fileB, choices, { progress } = {})
   const outU8 = destDb.export()
   destDb.close()
   bDb.close()
+  try { aDb.close() } catch (e) { /* ignore */ }
 
   const outZip = new JSZip()
   // try to reuse manifest from A
